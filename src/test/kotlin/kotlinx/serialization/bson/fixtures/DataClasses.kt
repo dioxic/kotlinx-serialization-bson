@@ -4,9 +4,6 @@ import kotlinx.serialization.*
 import kotlinx.serialization.bson.toBson
 import org.bson.*
 import org.bson.types.ObjectId
-import java.math.BigDecimal
-import java.time.Instant
-import java.util.*
 
 private typealias Simple = DataClassWithSimpleValues
 private typealias Single = DataClassWithSingleValue
