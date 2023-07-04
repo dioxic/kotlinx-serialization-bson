@@ -16,6 +16,7 @@ class JsonTests : FunSpec({
     val bsonNoDefaults = Bson {
         encodeDefaults = false
         explicitNulls = true
+        jsonMode = JsonMode.RELAXED
     }
 
     context("encode to string") {
