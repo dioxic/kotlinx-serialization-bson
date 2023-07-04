@@ -4,6 +4,8 @@
 package kotlinx.serialization.bson
 
 import kotlinx.serialization.*
+import kotlinx.serialization.bson.internal.DefaultBsonDecoder
+import kotlinx.serialization.bson.internal.DefaultBsonEncoder
 import kotlinx.serialization.modules.SerializersModule
 import org.bson.*
 import org.bson.codecs.BsonDocumentCodec
@@ -17,13 +19,13 @@ import java.io.StringWriter
 import java.nio.ByteBuffer
 
 /**
- * The main entry point to work with JSON serialization.
- * It is typically used by constructing an application-specific instance, with configured JSON-specific behaviour
+ * The main entry point to work with BSON serialization.
+ * It is typically used by constructing an application-specific instance, with configured BSON-specific behaviour
  * and, if necessary, registered in [SerializersModule] custom serializers.
  * `Bson` instance can be configured in its `Bson {}` factory function using [BsonBuilder].
  * For demonstration purposes or trivial usages, Bson [companion][Bson.Default] can be used instead.
  *
- * Then constructed instance can be used either as regular [SerialFormat] or [StringFormat]
+ * Then constructed instance can be used either as regular [SerialFormat] or [StringFormat] or [BinaryFormat]
  * or for converting objects to [BsonValue] back and forth.
  *
  * This is the only serial format which has the first-class [BsonValue] support.
@@ -35,23 +37,23 @@ import java.nio.ByteBuffer
  * @Serializable
  * class DataHolder(val id: Int, val data: String, val extensions: BsonValue)
  *
- * val json = Bson
+ * val bson = Bson
  * val instance = DataHolder(42, "some data", buildBsonObject { put("additional key", "value") }
  *
  * // Plain StringFormat usage
- * val stringOutput: String = json.encodeToString(instance)
+ * val stringOutput: String = bson.encodeToString(instance)
  *
- * // BsonValue serialization specific for JSON only
- * val jsonTree: BsonValue = json.encodeToBsonValue(instance)
+ * // BsonValue serialization specific for BSON only
+ * val bsonDocument: BsonValue = bson.encodeToBsonValue(instance)
  *
  * // Deserialize from string
- * val deserialized: DataHolder = json.decodeFromString<DataHolder>(stringOutput)
+ * val deserialized: DataHolder = bson.decodeFromString<DataHolder>(stringOutput)
  *
- * // Deserialize from json tree, JSON-specific
- * val deserializedFromTree: DataHolder = json.decodeFromBsonValue<DataHolder>(jsonTree)
+ * // Deserialize from json tree, BSON-specific
+ * val deserializedFromTree: DataHolder = bson.decodeFromBsonValue<DataHolder>(bsonDocument)
  *
- *  // Deserialize from string to JSON tree, JSON-specific
- *  val deserializedToTree: BsonValue = json.parseToBsonValue(stringOutput)
+ *  // Deserialize from string to BSON tree, BSON-specific
+ *  val deserializedToBsonValue: BsonValue = bson.parseToBsonValue(stringOutput)
  * ```
  *
  * Bson instance also exposes its [configuration] that can be used in custom serializers
@@ -68,9 +70,9 @@ sealed class Bson(
     companion object Default : Bson(BsonConfiguration(), defaultSerializersModule)
 
     /**
-     * Serializes the [value] into an equivalent JSON using the given [serializer].
+     * Serializes the [value] into an equivalent BSON using the given [serializer].
      *
-     * @throws [SerializationException] if the given value cannot be serialized to JSON.
+     * @throws [SerializationException] if the given value cannot be serialized to BSON.
      */
     final override fun <T> encodeToString(serializer: SerializationStrategy<T>, value: T): String {
         val writer = StringWriter()
@@ -82,9 +84,9 @@ sealed class Bson(
     }
 
     /**
-     * Deserializes the given JSON [string] into a value of type [T] using the given [deserializer].
+     * Deserializes the given BSON [string] into a value of type [T] using the given [deserializer].
      *
-     * @throws [SerializationException] if the given JSON string is not a valid JSON input for the type [T]
+     * @throws [SerializationException] if the given BSON string is not a valid BSON input for the type [T]
      * @throws [IllegalArgumentException] if the decoded input cannot be represented as a valid instance of type [T]
      */
     final override fun <T> decodeFromString(deserializer: DeserializationStrategy<T>, string: String): T {
@@ -119,7 +121,7 @@ sealed class Bson(
     /**
      * Serializes the given [value] into an equivalent [BsonValue] using the given [serializer]
      *
-     * @throws [SerializationException] if the given value cannot be serialized to JSON
+     * @throws [SerializationException] if the given value cannot be serialized to BSON
      */
     fun <T> encodeToBsonDocument(serializer: SerializationStrategy<T>, value: T): BsonDocument {
         val document = BsonDocument()
@@ -132,7 +134,7 @@ sealed class Bson(
     /**
      * Deserializes the given [bson] into a value of type [T] using the given [deserializer].
      *
-     * @throws [SerializationException] if the given JSON element is not a valid JSON input for the type [T]
+     * @throws [SerializationException] if the given BSON element is not a valid BSON input for the type [T]
      * @throws [IllegalArgumentException] if the decoded input cannot be represented as a valid instance of type [T]
      */
     fun <T> decodeFromBsonDocument(deserializer: DeserializationStrategy<T>, bson: BsonDocument): T {
@@ -142,9 +144,9 @@ sealed class Bson(
     }
 
     /**
-     * Deserializes the given JSON [string] into a corresponding [BsonValue] representation.
+     * Deserializes the given BSON [string] into a corresponding [BsonValue] representation.
      *
-     * @throws [SerializationException] if the given string is not a valid JSON
+     * @throws [SerializationException] if the given string is not a valid BSON
      */
     fun parseToBsonValue(string: String): BsonValue {
         return decodeFromString(BsonValueSerializer, string)
@@ -165,7 +167,7 @@ fun Bson(from: Bson = Bson, builderAction: BsonBuilder.() -> Unit): Bson {
  * Serializes the given [value] into an equivalent [BsonDocument] using a serializer retrieved
  * from reified type parameter.
  *
- * @throws [SerializationException] if the given value cannot be serialized to JSON.
+ * @throws [SerializationException] if the given value cannot be serialized to BSON.
  */
 inline fun <reified T> Bson.encodeToBsonDocument(value: T): BsonDocument {
     return encodeToBsonDocument(serializersModule.serializer(), value)
@@ -175,7 +177,7 @@ inline fun <reified T> Bson.encodeToBsonDocument(value: T): BsonDocument {
  * Deserializes the given [bson] element into a value of type [T] using a deserializer retrieved
  * from reified type parameter.
  *
- * @throws [SerializationException] if the given JSON element is not a valid JSON input for the type [T]
+ * @throws [SerializationException] if the given BSON element is not a valid BSON input for the type [T]
  * @throws [IllegalArgumentException] if the decoded input cannot be represented as a valid instance of type [T]
  */
 inline fun <reified T> Bson.decodeFromBsonDocument(bson: BsonDocument): T =
@@ -193,7 +195,7 @@ class BsonBuilder internal constructor(bson: Bson) {
     var encodeDefaults: Boolean = bson.configuration.encodeDefaults
 
     /**
-     * Specifies whether `null` values should be encoded for nullable properties and must be present in JSON object
+     * Specifies whether `null` values should be encoded for nullable properties and must be present in BSON object
      * during decoding.
      *
      * When this flag is disabled properties with `null` values without default are not encoded;
@@ -204,14 +206,14 @@ class BsonBuilder internal constructor(bson: Bson) {
     var explicitNulls: Boolean = bson.configuration.explicitNulls
 
     /**
-     * Specifies whether encounters of unknown properties in the input JSON
+     * Specifies whether encounters of unknown properties in the input BSON
      * should be ignored instead of throwing [SerializationException].
      * `false` by default.
      */
     var ignoreUnknownKeys: Boolean = bson.configuration.ignoreUnknownKeys
 
     /**
-     * Removes JSON specification restriction (RFC-4627) and makes parser
+     * Removes BSON specification restriction (RFC-4627) and makes parser
      * more liberal to the malformed input. In lenient mode quoted boolean literals,
      * and unquoted string literals are allowed.
      *
@@ -224,13 +226,13 @@ class BsonBuilder internal constructor(bson: Bson) {
 
     /**
      * Enables structured objects to be serialized as map keys by
-     * changing serialized form of the map from JSON object (key-value pairs) to flat array like `[k1, v1, k2, v2]`.
+     * changing serialized form of the map from BSON object (key-value pairs) to flat array like `[k1, v1, k2, v2]`.
      * `false` by default.
      */
     var allowStructuredMapKeys: Boolean = bson.configuration.allowStructuredMapKeys
 
     /**
-     * Specifies whether resulting JSON should be pretty-printed.
+     * Specifies whether resulting BSON should be pretty-printed.
      *  `false` by default.
      */
     var prettyPrint: Boolean = bson.configuration.prettyPrint
@@ -244,9 +246,9 @@ class BsonBuilder internal constructor(bson: Bson) {
     var prettyPrintIndent: String = bson.configuration.prettyPrintIndent
 
     /**
-     * Enables coercing incorrect JSON values to the default property value in the following cases:
-     *   1. JSON value is `null` but property type is non-nullable.
-     *   2. Property type is an enum type, but JSON value contains unknown enum member.
+     * Enables coercing incorrect BSON values to the default property value in the following cases:
+     *   1. BSON value is `null` but property type is non-nullable.
+     *   2. Property type is an enum type, but BSON value contains unknown enum member.
      *
      * `false` by default.
      */
@@ -254,7 +256,7 @@ class BsonBuilder internal constructor(bson: Bson) {
 
     /**
      * Switches polymorphic serialization to the default array format.
-     * This is an option for legacy JSON format and should not be generally used.
+     * This is an option for legacy BSON format and should not be generally used.
      * `false` by default.
      */
     var useArrayPolymorphism: Boolean = bson.configuration.useArrayPolymorphism
@@ -286,7 +288,7 @@ class BsonBuilder internal constructor(bson: Bson) {
                 "Indent should not be specified when default printing mode is used"
             }
         } else if (prettyPrintIndent != defaultIndent) {
-            // Values allowed by JSON specification as whitespaces
+            // Values allowed by BSON specification as whitespaces
             val allWhitespaces = prettyPrintIndent.all { it == ' ' || it == '\t' || it == '\r' || it == '\n' }
             require(allWhitespaces) {
                 "Only whitespace, tab, newline and carriage return are allowed as pretty print symbols. Had $prettyPrintIndent"
@@ -309,18 +311,7 @@ class BsonBuilder internal constructor(bson: Bson) {
     }
 }
 
-private class BsonImpl(configuration: BsonConfiguration, module: SerializersModule) : Bson(configuration, module) {
-
-//    init {
-//        validateConfiguration()
-//    }
-//
-//    private fun validateConfiguration() {
-//        if (serializersModule == EmptySerializersModule()) return // Fast-path for in-place JSON allocations
-//        val collector = PolymorphismValidator(configuration.useArrayPolymorphism, configuration.classDiscriminator)
-//        serializersModule.dumpTo(collector)
-//    }
-}
+private class BsonImpl(configuration: BsonConfiguration, module: SerializersModule) : Bson(configuration, module)
 
 object NoOpFieldNameValidator : FieldNameValidator {
     override fun validate(fieldName: String?) = true

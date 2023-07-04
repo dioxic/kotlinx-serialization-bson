@@ -84,3 +84,15 @@ object BsonValueSerializer : KSerializer<BsonValue> {
         decoder.asBsonDecoder().decodeBsonValue()
 
 }
+
+fun Decoder.asBsonDecoder(): BsonDecoder = this as? BsonDecoder
+    ?: throw IllegalStateException(
+        "This serializer can be used only with Bson format." +
+                "Expected Decoder to be BsonDecoder, got ${this::class}"
+    )
+
+fun Encoder.asBsonEncoder() = this as? BsonEncoder
+    ?: throw IllegalStateException(
+        "This serializer can be used only with Bson format." +
+                "Expected Encoder to be BsonEncoder, got ${this::class}"
+    )

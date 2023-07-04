@@ -34,9 +34,7 @@ abstract class BsonContentPolymorphicSerializer<T : Any>(private val baseClass: 
     final override fun deserialize(decoder: Decoder): T {
         val input = decoder.asBsonDecoder()
         input.reader().apply {
-            if (currentBsonType == null) {
-                readBsonType()
-            }
+            currentBsonType ?: readBsonType()
         }
         val bsonValue = input.decodeBsonValue()
         require(bsonValue is BsonDocument)
