@@ -16,7 +16,7 @@ abstract class BsonContentPolymorphicSerializer<T : Any>(private val baseClass: 
      * By default, it uses the name composed of [baseClass] simple name,
      * kind is set to [PolymorphicKind.SEALED] and contains 0 elements.
      *
-     * However, this descriptor can be overridden to achieve better representation of custom transformed JSON shape
+     * However, this descriptor can be overridden to achieve better representation of custom transformed BSON shape
      * for schema generating/introspection purposes.
      */
     override val descriptor: SerialDescriptor =
