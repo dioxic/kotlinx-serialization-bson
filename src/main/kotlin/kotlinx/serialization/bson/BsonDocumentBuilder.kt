@@ -1,11 +1,16 @@
 @file:OptIn(ExperimentalContracts::class)
-@file:Suppress("MemberVisibilityCanBePrivate")
+@file:Suppress("MemberVisibilityCanBePrivate", "unused")
 
 package kotlinx.serialization.bson
 
 import org.bson.*
+import org.bson.types.ObjectId
 import java.math.BigDecimal
 import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.util.UUID
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -87,6 +92,26 @@ class BsonDocumentBuilder @PublishedApi internal constructor() {
      * Add the given big decimal [value] to a resulting BSON object using the given [key].
      */
     fun put(key: String, value: BigDecimal) = put(key, value.toBson())
+
+    /**
+     * Add the given objectId [value] to a resulting BSON object using the given [key].
+     */
+    fun put(key: String, value: ObjectId) = put(key, value.toBson())
+
+    /**
+     * Add the given UUID [value] to a resulting BSON object using the given [key].
+     */
+    fun put(key: String, value: UUID) = put(key, value.toBson())
+
+    /**
+     * Add the given local date time [value] to a resulting BSON object using the given [key].
+     */
+    fun put(key: String, value: LocalDateTime) = put(key, value.toInstant(ZoneOffset.UTC))
+
+    /**
+     * Add the given local date time [value] to a resulting BSON object using the given [key].
+     */
+    fun put(key: String, value: LocalDate) = put(key, value.atStartOfDay().toInstant(ZoneOffset.UTC))
 
     /**
      * Add `null` to a resulting BSON object using the given [key].
