@@ -59,7 +59,7 @@ import java.nio.ByteBuffer
 sealed class Bson(
     val configuration: BsonConfiguration,
     override val serializersModule: SerializersModule
-) : StringFormat {
+) : StringFormat, BinaryFormat {
 
     /**
      * The default instance of [Bson] with default configuration.
@@ -92,6 +92,29 @@ sealed class Bson(
             bson = BsonDocumentCodec().decode(JsonReader(string))
         )
     }
+
+    /**
+     * Deserializes the given BSON [bytes] into a value of type [T] using the given [deserializer].
+     */
+    override fun <T> decodeFromByteArray(deserializer: DeserializationStrategy<T>, bytes: ByteArray): T {
+        return decodeFromBsonDocument(
+            deserializer = deserializer,
+            bson = BsonDocumentCodec().decode(BsonBinaryReader(ByteBuffer.wrap(bytes)))
+        )
+    }
+
+    /**
+     * Serializes the [value] into an equivalent BSON using the given [serializer].
+     */
+    override fun <T> encodeToByteArray(serializer: SerializationStrategy<T>, value: T): ByteArray {
+        val output = BasicOutputBuffer()
+        BsonDocumentCodec().encode(
+            writer = BsonBinaryWriter(output, NoOpFieldNameValidator),
+            value = encodeToBsonDocument(serializer, value)
+        )
+        return output.internalBuffer.sliceArray(0 until output.position)
+    }
+
     /**
      * Serializes the given [value] into an equivalent [BsonValue] using the given [serializer]
      *

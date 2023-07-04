@@ -52,14 +52,14 @@ data class DataClassWithSimpleValues(
 
 @Serializable
 data class DataClassWithSerialNames(
-    @SerialName("_id") val id: String,
+    @SerialName("_id") @Contextual val id: ObjectId,
     @SerialName("nom") val name: String,
     val string: String,
 ) : TestDataClass
 
 @Serializable
 data class DataClassWithSingleValue(
-    val string: String
+    val n: Int
 ) : TestDataClass
 
 @Serializable

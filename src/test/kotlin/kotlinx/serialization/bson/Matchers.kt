@@ -2,9 +2,9 @@ package kotlinx.serialization.bson
 
 import io.kotest.matchers.shouldBe
 
-infix fun String.shouldBeJson(expected: String): String {
+infix fun String.shouldBeJson(expected: String?): String {
     println(this)
-    return this.conform() shouldBe expected.conform()
+    return this.conform() shouldBe expected?.conform()
 }
 
 private fun String.conform() = this

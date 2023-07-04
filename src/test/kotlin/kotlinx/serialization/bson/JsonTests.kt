@@ -21,7 +21,6 @@ class JsonTests : FunSpec({
     }
 
     context("encode to string") {
-
         test("data class with simple values") {
             with(dataClassWithSimpleValues) {
                 bson.encodeToString(dataClass) shouldBeJson expectedJson
@@ -84,7 +83,6 @@ class JsonTests : FunSpec({
     }
 
     context("decode from string") {
-
         test("data class with simple values") {
             with(dataClassWithSimpleValues) {
                 bson.decodeFromString<DataClassWithSimpleValues>(expectedJson) shouldBe dataClass

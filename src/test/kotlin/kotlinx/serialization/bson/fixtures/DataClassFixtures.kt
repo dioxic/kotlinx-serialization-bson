@@ -10,6 +10,7 @@ import java.util.*
 data class DataClassFixture<T : TestDataClass>(
     val dataClass: T,
     val expectedJson: String,
+    val expectedBinaryHex: String? = null
 )
 
 val dataClassWithSimpleValues = DataClassFixture(
@@ -33,6 +34,9 @@ private val abcList = listOf("a", "b", "c")
 private val defList = listOf("d", "e", "f")
 private val abcMap = mapOf("a" to 1, "b" to 2, "c" to 3)
 private val defMap = mapOf("d" to 1, "e" to 2, "f" to 3)
+private val oid = ObjectId("64a2a1bcac2cb9126e80d408")
+private val instant: Instant = Instant.EPOCH
+private val uuid = UUID(123, 456)
 
 val dataClassWithCollections = DataClassFixture(
     dataClass = DataClassWithCollections(
@@ -64,7 +68,14 @@ val dataClassWithNulls = DataClassFixture(
     """.trimIndent(),
 )
 
-val single = DataClassWithSingleValue(string = "abc")
+val dataClassWithSingleValue = DataClassFixture(
+    dataClass = DataClassWithSingleValue(n = 123),
+    expectedJson = """
+        { "n": 123 }
+    """.trimIndent(),
+)
+
+private val single = dataClassWithSingleValue.dataClass
 
 val dataClassWithEmbedded = DataClassFixture(
     dataClass = DataClassWithEmbedded(
@@ -76,24 +87,25 @@ val dataClassWithEmbedded = DataClassFixture(
         embeddedMapMap = mapOf("nested" to mapOf("nested" to single)),
     ),
     expectedJson = """{
-        | "embedded": {"string": "abc"},
-        | "embeddedList": [{"string": "abc"}],
-        | "embeddedListList": [[{"string": "abc"}]],
-        | "embeddedMap": {"nested": {"string": "abc"}},
-        | "embeddedMapList": {"nested": [{"string": "abc"}]},
-        | "embeddedMapMap": {"nested": {"nested": {"string": "abc"}}}}
+        | "embedded": {"n": 123},
+        | "embeddedList": [{"n": 123}],
+        | "embeddedListList": [[{"n": 123}]],
+        | "embeddedMap": {"nested": {"n": 123}},
+        | "embeddedMapList": {"nested": [{"n": 123}]},
+        | "embeddedMapMap": {"nested": {"nested": {"n": 123}}}}
     """.trimMargin(),
 )
 
 val dataClassWithSerialNames = DataClassFixture(
     dataClass = DataClassWithSerialNames(
-        id = "abc",
+        id = oid,
         name = "Bob",
         string = "def",
     ),
     expectedJson = """
-        { "_id": "abc", "nom": "Bob", "string": "def" }
+        { "_id": {"${'$'}oid":"64a2a1bcac2cb9126e80d408"}, "nom": "Bob", "string": "def" }
     """.trimIndent(),
+    expectedBinaryHex = "33000000075f69640064a2a1bcac2cb9126e80d408026e6f6d0004000000426f620002737472696e6700040000006465660000"
 )
 
 val dataClassWithEncodeDefault = DataClassFixture(
@@ -105,10 +117,6 @@ val dataClassWithEncodeDefault = DataClassFixture(
         { "always": "default" }
     """.trimIndent(),
 )
-
-private val oid = ObjectId("64a2a1bcac2cb9126e80d408")
-private val instant: Instant = Instant.EPOCH
-private val uuid = UUID(123, 456)
 
 val dataClassWithBsonValuesSmallLong = DataClassFixture(
     dataClass = DataClassWithBsonValues(
