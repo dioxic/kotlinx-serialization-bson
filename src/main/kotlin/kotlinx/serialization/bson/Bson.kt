@@ -1,4 +1,5 @@
 @file:OptIn(ExperimentalSerializationApi::class)
+@file:Suppress("unused")
 
 package kotlinx.serialization.bson
 
@@ -183,7 +184,7 @@ inline fun <reified T> Bson.decodeFromBsonDocument(bson: BsonDocument): T =
 /**
  * Builder of the [Bson] instance provided by `Bson { ... }` factory function.
  */
-@Suppress("unused", "MemberVisibilityCanBePrivate")
+@Suppress("MemberVisibilityCanBePrivate")
 class BsonBuilder internal constructor(bson: Bson) {
     /**
      * Specifies whether default values of Kotlin properties should be encoded.
