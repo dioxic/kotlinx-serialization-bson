@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package kotlinx.serialization.bson
 
 import org.bson.*
@@ -5,35 +7,20 @@ import org.bson.types.Decimal128
 import org.bson.types.ObjectId
 import java.math.BigDecimal
 import java.time.Instant
-import java.util.UUID
+import java.util.*
 
 private fun BsonReader.conversionException() =
     BsonInvalidOperationException(
         "Reading field '$currentName' failed, cannot convert $currentBsonType to Int"
     )
 
-fun BsonReader.convertToInt(): Int =
+fun BsonReader.readNumber(): Number =
     when (currentBsonType) {
         BsonType.INT32 -> readInt32()
-        BsonType.INT64 -> readInt64().toInt()
-        BsonType.DOUBLE -> readDouble().toInt()
-        else -> throw conversionException()
-    }
-
-fun BsonReader.convertToLong(): Long =
-    when (currentBsonType) {
-        BsonType.INT32 -> readInt32().toLong()
         BsonType.INT64 -> readInt64()
-        BsonType.DOUBLE -> readDouble().toLong()
-        else -> throw conversionException()
-    }
-
-fun BsonReader.convertToDouble(): Double =
-    when (currentBsonType) {
-        BsonType.INT32 -> readInt32().toDouble()
-        BsonType.INT64 -> readInt64().toDouble()
         BsonType.DOUBLE -> readDouble()
-        else -> throw conversionException()
+        else -> throw BsonInvalidOperationException("readNumber can only be called when CurrentBSONType is" +
+                " ${BsonType.INT32}, ${BsonType.INT64} or ${BsonType.DOUBLE}, not when CurrentBSONType is ${currentBsonType}.")
     }
 
 fun Number.toBson(): BsonNumber =
@@ -86,10 +73,10 @@ fun ByteArray.toBson(subType: BsonBinarySubType): BsonBinary =
 fun ByteArray.toBson(): BsonBinary =
     BsonBinary(this)
 
-fun UUID.toBson() : BsonBinary =
+fun UUID.toBson(): BsonBinary =
     BsonBinary(this)
 
-fun UUID.toBson(uuidRepresentation: UuidRepresentation) : BsonBinary =
+fun UUID.toBson(uuidRepresentation: UuidRepresentation): BsonBinary =
     BsonBinary(this, uuidRepresentation)
 
 fun ObjectId.toBson(): BsonObjectId =

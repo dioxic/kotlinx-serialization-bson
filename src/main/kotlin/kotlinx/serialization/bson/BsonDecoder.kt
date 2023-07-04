@@ -151,14 +151,14 @@ internal open class DefaultBsonDecoder(
         }
     }
 
-    override fun decodeByte(): Byte = decodeInt().toByte()
+    override fun decodeByte(): Byte = reader.readNumber().toByte()
     override fun decodeChar(): Char = decodeString().single()
-    override fun decodeFloat(): Float = decodeDouble().toFloat()
-    override fun decodeShort(): Short = decodeInt().toShort()
+    override fun decodeFloat(): Float = reader.readNumber().toFloat()
+    override fun decodeShort(): Short = reader.readNumber().toShort()
     override fun decodeBoolean(): Boolean = readOrThrow({ reader.readBoolean() }, BsonType.BOOLEAN)
-    override fun decodeDouble(): Double = reader.convertToDouble()
-    override fun decodeInt(): Int = reader.convertToInt()
-    override fun decodeLong(): Long = reader.convertToLong()
+    override fun decodeDouble(): Double = reader.readNumber().toDouble()
+    override fun decodeInt(): Int = reader.readNumber().toInt()
+    override fun decodeLong(): Long = reader.readNumber().toLong()
     override fun decodeString(): String = readOrThrow({ reader.readString() }, BsonType.STRING)
 
     override fun decodeNull(): Nothing? {
