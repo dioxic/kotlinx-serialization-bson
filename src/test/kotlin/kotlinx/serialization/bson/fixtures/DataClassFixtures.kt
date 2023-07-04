@@ -1,6 +1,5 @@
 package kotlinx.serialization.bson.fixtures
 
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.bson.toBson
 import org.bson.*
 import org.bson.types.ObjectId
@@ -11,15 +10,7 @@ import java.util.*
 data class DataClassFixture<T : TestDataClass>(
     val dataClass: T,
     val expectedJson: String,
-    val serializer: KSerializer<T>
 )
-
-//inline fun <reified T : TestDataClass> fixture(dataClass: T, expected: String, serializer: KSerializer<T>) =
-//    DataClassFixture(
-//        dataClass = dataClass,
-//        expectedJson = expected,
-//        serializer = serializer
-//    )
 
 val dataClassWithSimpleValues = DataClassFixture(
     dataClass = DataClassWithSimpleValues(
@@ -36,7 +27,6 @@ val dataClassWithSimpleValues = DataClassFixture(
     expectedJson = """
         { "boolean": false, "byte": 123, "char": "A", "double": 123.0, "float": 123.0, "int": 123, "long": 123, "short": 123, "string": "abc" }
     """.trimIndent(),
-    serializer = DataClassWithSimpleValues.serializer()
 )
 
 private val abcList = listOf("a", "b", "c")
@@ -61,7 +51,6 @@ val dataClassWithCollections = DataClassFixture(
         | "mapList": {"a": ["a", "b", "c"], "b": ["d", "e", "f"]},
         | "mapMap": {"a": {"a": 1, "b": 2, "c": 3}, "b": {"d": 1, "e": 2, "f": 3}}}
     """.trimMargin(),
-    serializer = DataClassWithCollections.serializer()
 )
 
 val dataClassWithNulls = DataClassFixture(
@@ -73,7 +62,6 @@ val dataClassWithNulls = DataClassFixture(
     expectedJson = """
         { "boolean": true, "string": null, "listSimple": null}
     """.trimIndent(),
-    serializer = DataClassWithNulls.serializer()
 )
 
 val single = DataClassWithSingleValue(string = "abc")
@@ -95,7 +83,6 @@ val dataClassWithEmbedded = DataClassFixture(
         | "embeddedMapList": {"nested": [{"string": "abc"}]},
         | "embeddedMapMap": {"nested": {"nested": {"string": "abc"}}}}
     """.trimMargin(),
-    serializer = DataClassWithEmbedded.serializer()
 )
 
 val dataClassWithSerialNames = DataClassFixture(
@@ -107,7 +94,6 @@ val dataClassWithSerialNames = DataClassFixture(
     expectedJson = """
         { "_id": "abc", "nom": "Bob", "string": "def" }
     """.trimIndent(),
-    serializer = DataClassWithSerialNames.serializer()
 )
 
 val dataClassWithEncodeDefault = DataClassFixture(
@@ -118,7 +104,6 @@ val dataClassWithEncodeDefault = DataClassFixture(
     expectedJson = """
         { "always": "default" }
     """.trimIndent(),
-    serializer = DataClassWithEncodeDefault.serializer()
 )
 
 private val oid = ObjectId("64a2a1bcac2cb9126e80d408")
@@ -162,7 +147,6 @@ val dataClassWithBsonValuesSmallLong = DataClassFixture(
        | "timestamp": {"${'$'}timestamp": {"t": 123, "i": 4}},
        | "undefined": {"${'$'}undefined": true}}
     """.trimMargin(),
-    serializer = DataClassWithBsonValues.serializer()
 )
 
 val dataClassWithBsonValuesBigLong = DataClassFixture(
@@ -202,7 +186,6 @@ val dataClassWithBsonValuesBigLong = DataClassFixture(
        | "timestamp": {"${'$'}timestamp": {"t": 123, "i": 4}},
        | "undefined": {"${'$'}undefined": true}}
     """.trimMargin(),
-    serializer = DataClassWithBsonValues.serializer()
 )
 
 val dataClassWithTransient = DataClassFixture(
@@ -213,5 +196,4 @@ val dataClassWithTransient = DataClassFixture(
     expectedJson = """
         { "string": "abc" }
     """.trimIndent(),
-    serializer = DataClassWithTransient.serializer()
 )
