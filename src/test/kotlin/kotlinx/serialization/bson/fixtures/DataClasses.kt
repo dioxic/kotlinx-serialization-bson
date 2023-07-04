@@ -70,13 +70,7 @@ data class DataClassWithSingleValue(
 data class DataClassWithTransient(
     val string: String = "abc",
     @Transient val transient: String = "def"
-): TestDataClass {
-    companion object {
-        val expectedJson = """
-            { "string": "abc" }
-        """.trimIndent()
-    }
-}
+): TestDataClass
 
 @OptIn(ExperimentalSerializationApi::class)
 @Serializable
@@ -87,44 +81,20 @@ data class DataClassWithEncodeDefault(
 
 @Serializable
 data class DataClassWithBsonValues(
-    @Contextual val id: ObjectId = oid,
-    @Contextual val array: BsonArray = listOf("abc".toBson()).toBson(),
-    @Contextual val binary: BsonBinary = uuid.toBson(),
-    @Contextual val boolean: BsonBoolean = true.toBson(),
-    @Contextual val dateTime: BsonDateTime = instant.toBson(),
-    @Contextual val decimal128: BsonDecimal128 = BigDecimal.ONE.toBson(),
-    @Contextual val document: BsonDocument = BsonDocument("name", "Bob".toBson()),
-    @Contextual val double: BsonDouble = 123.0.toBson(),
-    @Contextual val int32: BsonInt32 = 123.toBson(),
-    @Contextual val int64: BsonInt64 = 123L.toBson(),
-    @Contextual val maxKey: BsonMaxKey = BsonMaxKey(),
-    @Contextual val minKey: BsonMinKey = BsonMinKey(),
-    @Contextual val objectId: BsonObjectId = oid.toBson(),
-    @Contextual val string: BsonString = "abc".toBson(),
-    @Contextual val timestamp: BsonTimestamp = BsonTimestamp(123, 4),
-    @Contextual val undefined: BsonUndefined = BsonUndefined(),
-): TestDataClass {
-    companion object {
-        private val oid = ObjectId("64a2a1bcac2cb9126e80d408")
-        private val instant = Instant.EPOCH
-        private val uuid = UUID(123, 456)
-        val expectedJson = """{
-           | "id": {"${'$'}oid": "64a2a1bcac2cb9126e80d408"},
-           | "array": ["abc"],
-           | "binary": {"${'$'}binary": {"base64": "AAAAAAAAAHsAAAAAAAAByA==", "subType": "04"}},
-           | "boolean": true,
-           | "dateTime": {"${'$'}date": "1970-01-01T00:00:00Z"},
-           | "decimal128": {"${'$'}numberDecimal": "1"},
-           | "document": {"name": "Bob"},
-           | "double": 123.0,
-           | "int32": 123,
-           | "int64": 123,
-           | "maxKey": {"${'$'}maxKey": 1},
-           | "minKey": {"${'$'}minKey": 1},
-           | "objectId": {"${'$'}oid": "64a2a1bcac2cb9126e80d408"},
-           | "string": "abc",
-           | "timestamp": {"${'$'}timestamp": {"t": 123, "i": 4}},
-           | "undefined": {"${'$'}undefined": true}}
-        """.trimMargin()
-    }
-}
+    @Contextual val id: ObjectId,
+    @Contextual val array: BsonArray,
+    @Contextual val binary: BsonBinary,
+    @Contextual val boolean: BsonBoolean,
+    @Contextual val dateTime: BsonDateTime,
+    @Contextual val decimal128: BsonDecimal128,
+    @Contextual val document: BsonDocument,
+    @Contextual val double: BsonDouble,
+    @Contextual val int32: BsonInt32,
+    @Contextual val int64: BsonInt64,
+    @Contextual val maxKey: BsonMaxKey,
+    @Contextual val minKey: BsonMinKey,
+    @Contextual val objectId: BsonObjectId,
+    @Contextual val string: BsonString,
+    @Contextual val timestamp: BsonTimestamp,
+    @Contextual val undefined: BsonUndefined,
+): TestDataClass

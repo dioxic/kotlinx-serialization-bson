@@ -125,7 +125,7 @@ private val oid = ObjectId("64a2a1bcac2cb9126e80d408")
 private val instant: Instant = Instant.EPOCH
 private val uuid = UUID(123, 456)
 
-val dataClassWithBsonValues = DataClassFixture(
+val dataClassWithBsonValuesSmallLong = DataClassFixture(
     dataClass = DataClassWithBsonValues(
         id = oid,
         array = listOf("abc".toBson()).toBson(),
@@ -155,6 +155,46 @@ val dataClassWithBsonValues = DataClassFixture(
        | "double": 123.0,
        | "int32": 123,
        | "int64": 123,
+       | "maxKey": {"${'$'}maxKey": 1},
+       | "minKey": {"${'$'}minKey": 1},
+       | "objectId": {"${'$'}oid": "64a2a1bcac2cb9126e80d408"},
+       | "string": "abc",
+       | "timestamp": {"${'$'}timestamp": {"t": 123, "i": 4}},
+       | "undefined": {"${'$'}undefined": true}}
+    """.trimMargin(),
+    serializer = DataClassWithBsonValues.serializer()
+)
+
+val dataClassWithBsonValuesBigLong = DataClassFixture(
+    dataClass = DataClassWithBsonValues(
+        id = oid,
+        array = listOf("abc".toBson()).toBson(),
+        binary = uuid.toBson(),
+        boolean = true.toBson(),
+        dateTime = instant.toBson(),
+        decimal128 = BigDecimal.ONE.toBson(),
+        document = BsonDocument("name", "Bob".toBson()),
+        double = 123.0.toBson(),
+        int32 = 123.toBson(),
+        int64 = Long.MAX_VALUE.toBson(),
+        maxKey = BsonMaxKey(),
+        minKey = BsonMinKey(),
+        objectId = oid.toBson(),
+        string = "abc".toBson(),
+        timestamp = BsonTimestamp(123, 4),
+        undefined = BsonUndefined(),
+    ),
+    expectedJson = """{
+       | "id": {"${'$'}oid": "64a2a1bcac2cb9126e80d408"},
+       | "array": ["abc"],
+       | "binary": {"${'$'}binary": {"base64": "AAAAAAAAAHsAAAAAAAAByA==", "subType": "04"}},
+       | "boolean": true,
+       | "dateTime": {"${'$'}date": "1970-01-01T00:00:00Z"},
+       | "decimal128": {"${'$'}numberDecimal": "1"},
+       | "document": {"name": "Bob"},
+       | "double": 123.0,
+       | "int32": 123,
+       | "int64": 9223372036854775807,
        | "maxKey": {"${'$'}maxKey": 1},
        | "minKey": {"${'$'}minKey": 1},
        | "objectId": {"${'$'}oid": "64a2a1bcac2cb9126e80d408"},
