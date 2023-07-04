@@ -197,3 +197,41 @@ val dataClassWithTransient = DataClassFixture(
         { "string": "abc" }
     """.trimIndent(),
 )
+
+val dataClassIndividual = DataClassFixture(
+    dataClass = Individual(
+        name = "Bob",
+        height = 26
+    ),
+    expectedJson = """
+        { "name": "Bob", "height": 26 }
+    """.trimIndent(),
+)
+
+val dataClassOrganisation = DataClassFixture(
+    dataClass = Organisation(
+        name = "MongoDB",
+        companyId = 1313
+    ),
+    expectedJson = """
+        { "name": "MongoDB", "companyId": 1313 }
+    """.trimIndent(),
+)
+
+val dataClassWithEmbeddedIndividual = DataClassFixture(
+    dataClass = DataClassWithParty(
+        party = dataClassIndividual.dataClass
+    ),
+    expectedJson = """
+        { "party": { "name": "Bob", "height": 26 } }
+    """.trimIndent(),
+)
+
+val dataClassWithEmbeddedOrganisation = DataClassFixture(
+    dataClass = DataClassWithParty(
+        party = dataClassOrganisation.dataClass
+    ),
+    expectedJson = """
+        { "party": { "name": "MongoDB", "companyId": 1313 } }
+    """.trimIndent(),
+)

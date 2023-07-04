@@ -34,6 +34,11 @@ abstract class BsonContentPolymorphicSerializer<T : Any>(private val baseClass: 
 
     final override fun deserialize(decoder: Decoder): T {
         val input = decoder.asBsonDecoder()
+        input.reader().apply {
+            if (currentBsonType == null) {
+                readBsonType()
+            }
+        }
         val bsonValue = input.decodeBsonValue()
         require(bsonValue is BsonDocument)
 
@@ -44,7 +49,7 @@ abstract class BsonContentPolymorphicSerializer<T : Any>(private val baseClass: 
     /**
      * Determines a particular strategy for deserialization by looking on a parsed JSON [element].
      */
-    protected abstract fun selectDeserializer(element: BsonValue): DeserializationStrategy<T>
+    protected abstract fun selectDeserializer(element: BsonDocument): DeserializationStrategy<T>
 
     private fun throwSubtypeNotRegistered(subClass: KClass<*>, baseClass: KClass<*>): Nothing {
         val subClassName = subClass.simpleName ?: "$subClass"
