@@ -4,11 +4,16 @@ package kotlinx.serialization.bson
 
 import kotlinx.serialization.*
 import kotlinx.serialization.modules.SerializersModule
-import org.bson.AbstractBsonReader
-import org.bson.BsonDocument
-import org.bson.BsonDocumentWriter
-import org.bson.BsonValue
+import org.bson.*
+import org.bson.codecs.BsonDocumentCodec
+import org.bson.codecs.DecoderContext
+import org.bson.codecs.EncoderContext
+import org.bson.io.BasicOutputBuffer
 import org.bson.json.JsonMode
+import org.bson.json.JsonReader
+import org.bson.json.JsonWriter
+import java.io.StringWriter
+import java.nio.ByteBuffer
 
 /**
  * The main entry point to work with JSON serialization.
@@ -66,18 +71,14 @@ sealed class Bson(
      *
      * @throws [SerializationException] if the given value cannot be serialized to JSON.
      */
-    final override fun <T> encodeToString(serializer: SerializationStrategy<T>, value: T): String =
-        encodeToBsonDocument(serializer, value).toJson(configuration.toJsonWriterSettings())
-
-    /**
-     * Decodes and deserializes the given JSON [string] to the value of type [T] using deserializer
-     * retrieved from the reified type parameter.
-     *
-     * @throws SerializationException in case of any decoding-specific error
-     * @throws IllegalArgumentException if the decoded input is not a valid instance of [T]
-     */
-    inline fun <reified T> decodeFromString(string: String): T =
-        decodeFromString(serializersModule.serializer(), string)
+    final override fun <T> encodeToString(serializer: SerializationStrategy<T>, value: T): String {
+        val writer = StringWriter()
+        BsonDocumentCodec().encode(
+            writer = JsonWriter(writer, configuration.toJsonWriterSettings()),
+            value = encodeToBsonDocument(serializer, value),
+        )
+        return writer.toString()
+    }
 
     /**
      * Deserializes the given JSON [string] into a value of type [T] using the given [deserializer].
@@ -86,7 +87,10 @@ sealed class Bson(
      * @throws [IllegalArgumentException] if the decoded input cannot be represented as a valid instance of type [T]
      */
     final override fun <T> decodeFromString(deserializer: DeserializationStrategy<T>, string: String): T {
-        return decodeFromBsonDocument(deserializer, BsonDocument.parse(string))
+        return decodeFromBsonDocument(
+            deserializer = deserializer,
+            bson = BsonDocumentCodec().decode(JsonReader(string))
+        )
     }
     /**
      * Serializes the given [value] into an equivalent [BsonValue] using the given [serializer]
@@ -248,7 +252,6 @@ class BsonBuilder internal constructor(bson: Bson) {
      */
     var serializersModule: SerializersModule = bson.serializersModule
 
-    @OptIn(ExperimentalSerializationApi::class)
     internal fun build(): BsonConfiguration {
         if (useArrayPolymorphism) require(classDiscriminator == defaultDiscriminator) {
             "Class discriminator should not be specified when array polymorphism is specified"
@@ -294,6 +297,18 @@ private class BsonImpl(configuration: BsonConfiguration, module: SerializersModu
 //        serializersModule.dumpTo(collector)
 //    }
 }
+
+object NoOpFieldNameValidator : FieldNameValidator {
+    override fun validate(fieldName: String?) = true
+
+    override fun getValidatorForField(fieldName: String?) = this
+}
+
+private fun BsonDocumentCodec.decode(reader: BsonReader) =
+    this.decode(reader, DecoderContext.builder().build())
+
+private fun BsonDocumentCodec.encode(writer: BsonWriter, value: BsonDocument) =
+    this.encode(writer, value, EncoderContext.builder().build())
 
 private const val defaultIndent = "  "
 private const val defaultDiscriminator = "type"

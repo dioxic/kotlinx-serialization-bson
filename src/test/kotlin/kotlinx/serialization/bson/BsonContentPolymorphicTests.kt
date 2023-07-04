@@ -3,6 +3,7 @@ package kotlinx.serialization.bson
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import kotlinx.serialization.bson.fixtures.*
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import org.bson.json.JsonMode
 
