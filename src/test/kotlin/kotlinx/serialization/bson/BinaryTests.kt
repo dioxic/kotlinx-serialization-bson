@@ -4,7 +4,7 @@ import io.kotest.core.spec.style.FunSpec
 import kotlinx.serialization.bson.fixtures.DataClassWithSerialNames
 import org.bson.types.ObjectId
 
-class BinaryBsonTests : FunSpec({
+class BinaryTests : FunSpec({
 
     with(Bson) {
         include(

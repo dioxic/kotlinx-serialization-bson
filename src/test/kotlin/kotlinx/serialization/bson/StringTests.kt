@@ -8,7 +8,7 @@ import java.math.BigDecimal
 import java.time.Instant
 import java.util.*
 
-class JsonTests : FunSpec({
+class StringTests : FunSpec({
 
     val abcList = listOf("a", "b", "c")
     val defList = listOf("d", "e", "f")
@@ -17,7 +17,7 @@ class JsonTests : FunSpec({
 
     with(Bson) {
         include(
-            jsonTest(
+            stringTest(
                 name = "include data class with simple values",
                 dataClass = DataClassWithSimpleValues(
                     boolean = false,
@@ -37,7 +37,7 @@ class JsonTests : FunSpec({
         )
 
         include(
-            jsonTest(
+            stringTest(
                 name = "data class with collections",
                 dataClass = DataClassWithCollections(
                     listSimple = abcList,
@@ -59,7 +59,7 @@ class JsonTests : FunSpec({
         )
 
         include(
-            jsonTest(
+            stringTest(
                 name = "data class with nulls",
                 dataClass = DataClassWithNulls(
                     boolean = true,
@@ -75,7 +75,7 @@ class JsonTests : FunSpec({
         val single = DataClassWithSingleValue(n = 123)
 
         include(
-            jsonTest(
+            stringTest(
                 name = "data class with embedded",
                 dataClass = DataClassWithEmbedded(
                     embedded = single,
@@ -97,7 +97,7 @@ class JsonTests : FunSpec({
         )
 
         include(
-            jsonTest(
+            stringTest(
                 name = "data class with serial names",
                 dataClass = DataClassWithSerialNames(
                     id = ObjectId("64a2a1bcac2cb9126e80d408"),
@@ -111,7 +111,7 @@ class JsonTests : FunSpec({
         )
 
         include(
-            jsonTest(
+            stringTest(
                 name = "data class with bson values",
                 dataClass = DataClassWithBsonValues(
                     array = listOf("abc".toBson()).toBson(),
@@ -151,7 +151,7 @@ class JsonTests : FunSpec({
         )
 
         include(
-            jsonTest(
+            stringTest(
                 name = "data class with transient",
                 dataClass = DataClassWithTransient(
                     string = "abc",
@@ -164,7 +164,7 @@ class JsonTests : FunSpec({
         )
 
         include(
-            jsonTest(
+            stringTest(
                 name = "data class with big Long",
                 dataClass = DataClassWithSingleValue(
                     n = Long.MAX_VALUE
@@ -175,7 +175,7 @@ class JsonTests : FunSpec({
             )
         )
         include(
-            jsonTest(
+            stringTest(
                 name = "data class with small Long",
                 dataClass = DataClassWithSingleValue(
                     n = 123L
@@ -186,7 +186,7 @@ class JsonTests : FunSpec({
             )
         )
         include(
-            jsonTest(
+            stringTest(
                 name = "data class with encode defaults (encodeDefaults=true)",
                 dataClass = DataClassWithEncodeDefault(
                     never = "default",
@@ -203,7 +203,7 @@ class JsonTests : FunSpec({
         encodeDefaults = false
     }) {
         include(
-            jsonTest(
+            stringTest(
                 name = "data class with encode defaults (encodeDefaults=false)",
                 dataClass = DataClassWithEncodeDefault(
                     never = "default",

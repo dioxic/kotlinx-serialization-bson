@@ -9,7 +9,7 @@ class BsonContentPolymorphicTests : FunSpec({
 
     with(Bson) {
         include(
-            jsonTest(
+            stringTest(
                 name = "individual",
                 dataClass = Individual(
                     name = "Bob",
@@ -21,7 +21,7 @@ class BsonContentPolymorphicTests : FunSpec({
             )
         )
         include(
-            jsonTest(
+            stringTest(
                 name = "organisation",
                 dataClass = Organisation(
                     name = "MongoDB",
@@ -33,7 +33,7 @@ class BsonContentPolymorphicTests : FunSpec({
             )
         )
         include(
-            jsonTest(
+            stringTest(
                 name = "embedded organisation",
                 dataClass = DataClassWithParty(
                     party = Organisation(
@@ -47,7 +47,7 @@ class BsonContentPolymorphicTests : FunSpec({
             )
         )
         include(
-            jsonTest(
+            stringTest(
                 name = "embedded individual",
                 dataClass = DataClassWithParty(
                     party = Individual(
