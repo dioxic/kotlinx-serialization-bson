@@ -59,12 +59,12 @@ data class DataClassWithSerialNames(
 
 @Serializable
 data class DataClassWithSingleValue(
-    val n: Int
+    val n: Long
 ) : TestDataClass
 
 @Serializable
 data class DataClassWithTransient(
-    val string: String = "abc",
+    val string: String,
     @Transient val transient: String = "def"
 ) : TestDataClass
 
@@ -77,7 +77,6 @@ data class DataClassWithEncodeDefault(
 
 @Serializable
 data class DataClassWithBsonValues(
-    @Contextual val id: ObjectId,
     @Contextual val array: BsonArray,
     @Contextual val binary: BsonBinary,
     @Contextual val boolean: BsonBoolean,
@@ -105,9 +104,9 @@ sealed interface Party : TestDataClass {
     val name: String
 
     companion object PartySerializer : BsonContentPolymorphicSerializer<Party>(Party::class) {
-        override fun selectDeserializer(element: BsonDocument) = when {
-            "height" in element -> Individual.serializer()
-            "companyId" in element -> Organisation.serializer()
+        override fun selectDeserializer(document: BsonDocument) = when {
+            "height" in document -> Individual.serializer()
+            "companyId" in document -> Organisation.serializer()
             else -> error("No valid serializer")
         }
     }

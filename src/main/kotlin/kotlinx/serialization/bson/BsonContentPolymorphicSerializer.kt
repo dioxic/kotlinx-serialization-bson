@@ -44,9 +44,9 @@ abstract class BsonContentPolymorphicSerializer<T : Any>(private val baseClass: 
     }
 
     /**
-     * Determines a particular strategy for deserialization by looking on a parsed JSON [element].
+     * Determines a particular strategy for deserialization by looking on a parsed JSON [document].
      */
-    protected abstract fun selectDeserializer(element: BsonDocument): DeserializationStrategy<T>
+    protected abstract fun selectDeserializer(document: BsonDocument): DeserializationStrategy<T>
 
     private fun throwSubtypeNotRegistered(subClass: KClass<*>, baseClass: KClass<*>): Nothing {
         val subClassName = subClass.simpleName ?: "$subClass"

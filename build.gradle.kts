@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     kotlin("jvm") version "1.8.22"
     alias(libs.plugins.kotlin.serialization)
@@ -26,6 +28,10 @@ tasks.test {
 java {
     withJavadocJar()
     withSourcesJar()
+}
+
+tasks.withType<KotlinCompile>().forEach {
+    it.kotlinOptions.freeCompilerArgs += "-Xcontext-receivers"
 }
 
 publishing {

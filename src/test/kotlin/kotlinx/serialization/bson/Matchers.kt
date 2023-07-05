@@ -3,7 +3,7 @@ package kotlinx.serialization.bson
 import io.kotest.matchers.shouldBe
 
 infix fun String.shouldBeJson(expected: String?): String {
-    println(this)
+//    println(this)
     return this.conform() shouldBe expected?.conform()
 }
 

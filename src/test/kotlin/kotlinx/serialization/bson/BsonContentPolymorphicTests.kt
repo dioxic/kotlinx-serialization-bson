@@ -1,71 +1,64 @@
 package kotlinx.serialization.bson
 
 import io.kotest.core.spec.style.FunSpec
-import io.kotest.matchers.shouldBe
-import kotlinx.serialization.bson.fixtures.*
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import org.bson.json.JsonMode
+import kotlinx.serialization.bson.fixtures.DataClassWithParty
+import kotlinx.serialization.bson.fixtures.Individual
+import kotlinx.serialization.bson.fixtures.Organisation
 
 class BsonContentPolymorphicTests : FunSpec({
 
-    val bson = Bson {
-        encodeDefaults = true
-        explicitNulls = true
-        jsonMode = JsonMode.RELAXED
+    with(Bson) {
+        include(
+            jsonTest(
+                name = "individual",
+                dataClass = Individual(
+                    name = "Bob",
+                    height = 26
+                ),
+                json = """
+                    { "name": "Bob", "height": 26 }
+                """.trimIndent()
+            )
+        )
+        include(
+            jsonTest(
+                name = "organisation",
+                dataClass = Organisation(
+                    name = "MongoDB",
+                    companyId = 1313
+                ),
+                json = """
+                    { "name": "MongoDB", "companyId": 1313 }
+                """.trimIndent()
+            )
+        )
+        include(
+            jsonTest(
+                name = "embedded organisation",
+                dataClass = DataClassWithParty(
+                    party = Organisation(
+                        name = "MongoDB",
+                        companyId = 1313
+                    )
+                ),
+                json = """
+                    { "party": { "name": "MongoDB", "companyId": 1313 } }
+                """.trimIndent()
+            )
+        )
+        include(
+            jsonTest(
+                name = "embedded individual",
+                dataClass = DataClassWithParty(
+                    party = Individual(
+                        name = "Bob",
+                        height = 26
+                    )
+                ),
+                json = """
+                    { "party": { "name": "Bob", "height": 26 } }
+                """.trimIndent()
+            )
+        )
     }
-
-    context("root") {
-        test("encoding individual has no class discriminator field") {
-            with(dataClassIndividual) {
-                bson.encodeToString<Party>(dataClass) shouldBeJson expectedJson
-            }
-        }
-
-        test("encoding organisation has no class discriminator field") {
-            with(dataClassOrganisation) {
-                bson.encodeToString<Party>(dataClass) shouldBeJson expectedJson
-            }
-        }
-
-        test("decoding individual works without a class discriminator field") {
-            with(dataClassIndividual) {
-                bson.decodeFromString<Party>(expectedJson) shouldBe dataClass
-            }
-        }
-
-        test("decoding organisation works without a class discriminator field") {
-            with(dataClassOrganisation) {
-                bson.decodeFromString<Party>(expectedJson) shouldBe dataClass
-            }
-        }
-    }
-
-    context("embedded") {
-        test("encoding individual has no class discriminator field") {
-            with(dataClassWithEmbeddedIndividual) {
-                bson.encodeToString(dataClass) shouldBeJson expectedJson
-            }
-        }
-
-        test("encoding organisation has no class discriminator field") {
-            with(dataClassWithEmbeddedOrganisation) {
-                bson.encodeToString(dataClass) shouldBeJson expectedJson
-            }
-        }
-
-        test("decoding individual works without a class discriminator field") {
-            with(dataClassWithEmbeddedIndividual) {
-                bson.decodeFromString<DataClassWithParty>(expectedJson) shouldBe dataClass
-            }
-        }
-
-        test("decoding organisation works without a class discriminator field") {
-            with(dataClassWithEmbeddedOrganisation) {
-                bson.decodeFromString<DataClassWithParty>(expectedJson) shouldBe dataClass
-            }
-        }
-    }
-
-
 })
