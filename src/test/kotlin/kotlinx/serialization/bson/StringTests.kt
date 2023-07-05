@@ -1,7 +1,11 @@
 package kotlinx.serialization.bson
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.bson.fixtures.*
+import kotlinx.serialization.decodeFromString
 import org.bson.*
 import org.bson.types.ObjectId
 import java.math.BigDecimal
@@ -242,5 +246,23 @@ class StringTests : FunSpec({
             """.trimIndent()
         )
     )
+    context("unknown keys") {
+        val dataClass = DataClassWithSingleValue(
+            n = 123L
+        )
+        val json = """
+            { "n": 123, "unknown": "abc" }
+        """.trimIndent()
+
+        test("succeeds when ignoreUnknownKeys=true") {
+            Bson.decodeFromString<DataClassWithSingleValue>(json) shouldBe dataClass
+        }
+        test("fails when ignoreUnknownKeys=false)") {
+            shouldThrow<SerializationException> {
+                Bson.decodeFromString<DataClassWithSingleValue>(json) shouldBe dataClass
+            }
+        }
+    }
+
 
 })
