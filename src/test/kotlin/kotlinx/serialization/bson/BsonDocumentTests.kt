@@ -2,7 +2,6 @@ package kotlinx.serialization.bson
 
 import io.kotest.core.spec.style.FunSpec
 import kotlinx.serialization.bson.fixtures.DataClassWithBsonValues
-import kotlinx.serialization.bson.fixtures.DataClassWithCollections
 import kotlinx.serialization.bson.fixtures.DataClassWithSerialNames
 import kotlinx.serialization.bson.fixtures.DataClassWithSimpleValues
 import org.bson.*

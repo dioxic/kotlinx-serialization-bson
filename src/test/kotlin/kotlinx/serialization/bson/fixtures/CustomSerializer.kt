@@ -5,7 +5,6 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.bson.BsonValueSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.buildClassSerialDescriptor
-import kotlinx.serialization.descriptors.element
 import kotlinx.serialization.encoding.*
 import org.bson.BsonDocument
 import org.bson.BsonValue
