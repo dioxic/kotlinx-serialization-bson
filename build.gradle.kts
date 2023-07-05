@@ -30,10 +30,6 @@ java {
     withSourcesJar()
 }
 
-tasks.withType<KotlinCompile>().forEach {
-    it.kotlinOptions.freeCompilerArgs += "-Xcontext-receivers"
-}
-
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {

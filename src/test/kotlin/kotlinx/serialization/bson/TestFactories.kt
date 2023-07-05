@@ -8,50 +8,50 @@ import kotlinx.serialization.encodeToHexString
 import kotlinx.serialization.encodeToString
 import org.bson.BsonDocument
 
-context(Bson)
 inline fun <reified T> stringTest(
     name: String,
     dataClass: T,
-    json: String
+    json: String,
+    bson: Bson = Bson,
 ) = funSpec {
     context(name) {
         test("encode") {
-            encodeToString(dataClass) shouldBeJson json
+            bson.encodeToString(dataClass) shouldBeJson json
         }
         test("decode") {
-            decodeFromString<T>(json) shouldBe dataClass
+            bson.decodeFromString<T>(json) shouldBe dataClass
         }
     }
 }
 
-context(Bson)
 inline fun <reified T> binaryTest(
     name: String,
     dataClass: T,
-    hexString: String
+    hexString: String,
+    bson: Bson = Bson,
 ) = funSpec {
     context(name) {
         test("encode") {
-            encodeToHexString(dataClass) shouldBeJson hexString
+            bson.encodeToHexString(dataClass) shouldBeJson hexString
         }
         test("decode") {
-            decodeFromHexString<T>(hexString) shouldBe dataClass
+            bson.decodeFromHexString<T>(hexString) shouldBe dataClass
         }
     }
 }
 
-context(Bson)
 inline fun <reified T> bsonDocumentTest(
     name: String,
     dataClass: T,
-    document: BsonDocument
+    document: BsonDocument,
+    bson: Bson = Bson,
 ) = funSpec {
     context(name) {
         test("encode") {
-            encodeToBsonDocument(dataClass) shouldBe document
+            bson.encodeToBsonDocument(dataClass) shouldBe document
         }
         test("decode") {
-            decodeFromBsonDocument<T>(document) shouldBe dataClass
+            bson.decodeFromBsonDocument<T>(document) shouldBe dataClass
         }
     }
 }
