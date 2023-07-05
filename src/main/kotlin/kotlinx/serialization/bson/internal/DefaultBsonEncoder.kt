@@ -110,8 +110,7 @@ internal class DefaultBsonEncoder(
                 encodeName(it)
                 super<BsonEncoder>.encodeNullableSerializableValue(serializer, value)
             }
-        }
-            ?: super<BsonEncoder>.encodeNullableSerializableValue(serializer, value)
+        } ?: super<BsonEncoder>.encodeNullableSerializableValue(serializer, value)
     }
 
     override fun encodeByte(value: Byte) = encodeInt(value.toInt())

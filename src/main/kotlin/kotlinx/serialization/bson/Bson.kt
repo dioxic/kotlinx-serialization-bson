@@ -225,13 +225,6 @@ class BsonBuilder internal constructor(bson: Bson) {
     var jsonMode: JsonMode = bson.configuration.jsonMode
 
     /**
-     * Enables structured objects to be serialized as map keys by
-     * changing serialized form of the map from BSON object (key-value pairs) to flat array like `[k1, v1, k2, v2]`.
-     * `false` by default.
-     */
-    var allowStructuredMapKeys: Boolean = bson.configuration.allowStructuredMapKeys
-
-    /**
      * Specifies whether resulting BSON should be pretty-printed.
      *  `false` by default.
      */
@@ -244,22 +237,6 @@ class BsonBuilder internal constructor(bson: Bson) {
      * it is not clear whether this option has compelling use-cases.
      */
     var prettyPrintIndent: String = bson.configuration.prettyPrintIndent
-
-    /**
-     * Enables coercing incorrect BSON values to the default property value in the following cases:
-     *   1. BSON value is `null` but property type is non-nullable.
-     *   2. Property type is an enum type, but BSON value contains unknown enum member.
-     *
-     * `false` by default.
-     */
-    var coerceInputValues: Boolean = bson.configuration.coerceInputValues
-
-    /**
-     * Switches polymorphic serialization to the default array format.
-     * This is an option for legacy BSON format and should not be generally used.
-     * `false` by default.
-     */
-    var useArrayPolymorphism: Boolean = bson.configuration.useArrayPolymorphism
 
     /**
      * Name of the class descriptor property for polymorphic serialization.
@@ -279,10 +256,6 @@ class BsonBuilder internal constructor(bson: Bson) {
     var serializersModule: SerializersModule = bson.serializersModule
 
     internal fun build(): BsonConfiguration {
-        if (useArrayPolymorphism) require(classDiscriminator == defaultDiscriminator) {
-            "Class discriminator should not be specified when array polymorphism is specified"
-        }
-
         if (!prettyPrint) {
             require(prettyPrintIndent == defaultIndent) {
                 "Indent should not be specified when default printing mode is used"
@@ -300,12 +273,9 @@ class BsonBuilder internal constructor(bson: Bson) {
             ignoreUnknownKeys = ignoreUnknownKeys,
             jsonMode = jsonMode,
             newLineCharacters = newLineCharacters,
-            allowStructuredMapKeys = allowStructuredMapKeys,
             prettyPrint = prettyPrint,
             explicitNulls = explicitNulls,
             prettyPrintIndent = prettyPrintIndent,
-            coerceInputValues = coerceInputValues,
-            useArrayPolymorphism = useArrayPolymorphism,
             classDiscriminator = classDiscriminator
         )
     }
