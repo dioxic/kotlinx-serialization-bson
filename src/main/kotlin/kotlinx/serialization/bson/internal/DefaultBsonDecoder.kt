@@ -2,7 +2,10 @@ package kotlinx.serialization.bson.internal
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationException
-import kotlinx.serialization.bson.*
+import kotlinx.serialization.bson.Bson
+import kotlinx.serialization.bson.BsonConfiguration
+import kotlinx.serialization.bson.BsonDecoder
+import kotlinx.serialization.bson.readNumber
 import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.encoding.AbstractDecoder
 import kotlinx.serialization.encoding.CompositeDecoder
@@ -72,13 +75,15 @@ internal open class DefaultBsonDecoder(
         return name?.let {
             val index = descriptor.getElementIndex(it)
             return if (index == CompositeDecoder.UNKNOWN_NAME) {
+                if (!bson.configuration.ignoreUnknownKeys){
+                    throw UnknownKeyException(it)
+                }
                 reader.skipValue()
                 decodeElementIndexImpl(descriptor)
             } else {
                 index
             }
-        }
-            ?: CompositeDecoder.UNKNOWN_NAME
+        } ?: CompositeDecoder.UNKNOWN_NAME
     }
 
     @Suppress("ReturnCount")
@@ -147,11 +152,12 @@ internal open class DefaultBsonDecoder(
 
     override fun decodeObjectId(): ObjectId = readOrThrow({ reader.readObjectId() }, BsonType.OBJECT_ID)
     override fun decodeBsonValue(): BsonValue {
-        if (reader.currentBsonType == null){
+        if (reader.currentBsonType == null) {
             reader.readBsonType()
         }
         return bsonValueCodec.decode(reader, DecoderContext.builder().build())
     }
+
     override fun reader(): BsonReader = reader
 
     private inline fun <T> readOrThrow(action: () -> T, bsonType: BsonType): T {

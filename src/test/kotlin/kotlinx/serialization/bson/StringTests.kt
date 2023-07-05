@@ -255,7 +255,8 @@ class StringTests : FunSpec({
         """.trimIndent()
 
         test("succeeds when ignoreUnknownKeys=true") {
-            Bson.decodeFromString<DataClassWithSingleValue>(json) shouldBe dataClass
+            Bson { ignoreUnknownKeys = true }
+                .decodeFromString<DataClassWithSingleValue>(json) shouldBe dataClass
         }
         test("fails when ignoreUnknownKeys=false)") {
             shouldThrow<SerializationException> {
@@ -263,6 +264,5 @@ class StringTests : FunSpec({
             }
         }
     }
-
 
 })
