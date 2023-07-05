@@ -185,14 +185,9 @@ class JsonTests : FunSpec({
                 """.trimIndent()
             )
         )
-    }
-
-    with(Bson {
-        encodeDefaults = false
-    }) {
         include(
             jsonTest(
-                name = "data class with encode defaults (encodeDefaults=false)",
+                name = "data class with encode defaults (encodeDefaults=true)",
                 dataClass = DataClassWithEncodeDefault(
                     never = "default",
                     always = "default",
@@ -203,10 +198,13 @@ class JsonTests : FunSpec({
             )
         )
     }
-    with(Bson) {
+
+    with(Bson {
+        encodeDefaults = false
+    }) {
         include(
             jsonTest(
-                name = "data class with encode defaults (encodeDefaults=true)",
+                name = "data class with encode defaults (encodeDefaults=false)",
                 dataClass = DataClassWithEncodeDefault(
                     never = "default",
                     always = "default",
