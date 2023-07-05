@@ -146,7 +146,12 @@ internal open class DefaultBsonDecoder(
     }
 
     override fun decodeObjectId(): ObjectId = readOrThrow({ reader.readObjectId() }, BsonType.OBJECT_ID)
-    override fun decodeBsonValue(): BsonValue = bsonValueCodec.decode(reader, DecoderContext.builder().build())
+    override fun decodeBsonValue(): BsonValue {
+        if (reader.currentBsonType == null){
+            reader.readBsonType()
+        }
+        return bsonValueCodec.decode(reader, DecoderContext.builder().build())
+    }
     override fun reader(): BsonReader = reader
 
     private inline fun <T> readOrThrow(action: () -> T, bsonType: BsonType): T {

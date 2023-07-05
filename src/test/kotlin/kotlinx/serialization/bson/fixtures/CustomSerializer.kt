@@ -1,33 +1,38 @@
 package kotlinx.serialization.bson.fixtures
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.bson.BsonValueSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.buildClassSerialDescriptor
 import kotlinx.serialization.descriptors.element
 import kotlinx.serialization.encoding.*
+import org.bson.BsonDocument
+import org.bson.BsonValue
 
-object CustomSerializer : KSerializer<DataClassWithSingleValue> {
+@OptIn(ExperimentalSerializationApi::class)
+object CustomSerializer : KSerializer<DataClassWithSingleBsonValue> {
     override val descriptor: SerialDescriptor =
         buildClassSerialDescriptor("DataClassWithSingleValue") {
-            element<Long>("n")
+            element("doc", BsonValueSerializer.descriptor)
         }
 
-    override fun deserialize(decoder: Decoder): DataClassWithSingleValue =
+    override fun deserialize(decoder: Decoder): DataClassWithSingleBsonValue =
         decoder.decodeStructure(descriptor) {
-            var n: Long = -1
+            var doc: BsonValue = BsonDocument()
             while (true) {
                 when (val index = decodeElementIndex(descriptor)) {
-                    0 -> n = decodeLongElement(descriptor, 0)
+                    0 -> doc = decodeSerializableElement(descriptor, 0, BsonValueSerializer)
                     CompositeDecoder.DECODE_DONE -> break
                     else -> error("Unexpected index: $index")
                 }
             }
-            DataClassWithSingleValue(n = n)
+            DataClassWithSingleBsonValue(doc = doc.asDocument())
         }
 
-    override fun serialize(encoder: Encoder, value: DataClassWithSingleValue) =
+    override fun serialize(encoder: Encoder, value: DataClassWithSingleBsonValue) =
         encoder.encodeStructure(descriptor) {
-            encodeLongElement(descriptor, 0, value.n)
+            encodeSerializableElement(descriptor, 0, BsonValueSerializer, value.doc)
         }
 
 }

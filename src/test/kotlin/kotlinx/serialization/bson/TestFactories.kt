@@ -2,7 +2,6 @@ package kotlinx.serialization.bson
 
 import io.kotest.core.spec.style.funSpec
 import io.kotest.matchers.shouldBe
-import kotlinx.serialization.bson.fixtures.TestDataClass
 import kotlinx.serialization.decodeFromHexString
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToHexString
@@ -10,7 +9,7 @@ import kotlinx.serialization.encodeToString
 import org.bson.BsonDocument
 
 context(Bson)
-inline fun <reified T : TestDataClass> stringTest(
+inline fun <reified T> stringTest(
     name: String,
     dataClass: T,
     json: String
@@ -26,7 +25,7 @@ inline fun <reified T : TestDataClass> stringTest(
 }
 
 context(Bson)
-inline fun <reified T : TestDataClass> binaryTest(
+inline fun <reified T> binaryTest(
     name: String,
     dataClass: T,
     hexString: String
@@ -42,7 +41,7 @@ inline fun <reified T : TestDataClass> binaryTest(
 }
 
 context(Bson)
-inline fun <reified T : TestDataClass> bsonDocumentTest(
+inline fun <reified T> bsonDocumentTest(
     name: String,
     dataClass: T,
     document: BsonDocument

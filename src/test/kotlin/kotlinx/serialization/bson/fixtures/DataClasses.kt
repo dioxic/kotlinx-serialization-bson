@@ -8,9 +8,6 @@ import org.bson.types.ObjectId
 private typealias Single = DataClassWithSingleValue
 
 @Serializable
-sealed interface TestDataClass
-
-@Serializable
 data class DataClassWithCollections(
     val listSimple: List<String>,
     val listList: List<List<String>>,
@@ -18,7 +15,7 @@ data class DataClassWithCollections(
     val mapSimple: Map<String, Int>,
     val mapList: Map<String, List<String>>,
     val mapMap: Map<String, Map<String, Int>>,
-) : TestDataClass
+)
 
 @Serializable
 data class DataClassWithEmbedded(
@@ -28,14 +25,14 @@ data class DataClassWithEmbedded(
     val embeddedMap: Map<String, Single>,
     val embeddedMapList: Map<String, List<Single>>,
     val embeddedMapMap: Map<String, Map<String, Single>>,
-) : TestDataClass
+)
 
 @Serializable
 data class DataClassWithNulls(
     val boolean: Boolean?,
     val string: String?,
     val listSimple: List<String?>?
-) : TestDataClass
+)
 
 @Serializable
 data class DataClassWithSimpleValues(
@@ -48,32 +45,37 @@ data class DataClassWithSimpleValues(
     val long: Long,
     val short: Short,
     val string: String,
-) : TestDataClass
+)
 
 @Serializable
 data class DataClassWithSerialNames(
     @SerialName("_id") @Contextual val id: ObjectId,
     @SerialName("nom") val name: String,
     val string: String,
-) : TestDataClass
+)
 
 @Serializable
 data class DataClassWithSingleValue(
     val n: Long
-) : TestDataClass
+)
+
+@Serializable(with = CustomSerializer::class)
+data class DataClassWithSingleBsonValue(
+    val doc: BsonDocument
+)
 
 @Serializable
 data class DataClassWithTransient(
     val string: String,
     @Transient val transient: String = "def"
-) : TestDataClass
+)
 
 @OptIn(ExperimentalSerializationApi::class)
 @Serializable
 data class DataClassWithEncodeDefault(
     @EncodeDefault(EncodeDefault.Mode.NEVER) val never: String = "default",
     @EncodeDefault(EncodeDefault.Mode.ALWAYS) val always: String = "default"
-) : TestDataClass
+)
 
 @Serializable
 data class DataClassWithBsonValues(
@@ -92,15 +94,15 @@ data class DataClassWithBsonValues(
     @Contextual val string: BsonString,
     @Contextual val timestamp: BsonTimestamp,
     @Contextual val undefined: BsonUndefined,
-) : TestDataClass
+)
 
 @Serializable
 data class DataClassWithParty(
     val party: Party
-): TestDataClass
+)
 
 @Serializable(Party.PartySerializer::class)
-sealed interface Party : TestDataClass {
+sealed interface Party {
     val name: String
 
     companion object PartySerializer : BsonContentPolymorphicSerializer<Party>(Party::class) {
@@ -123,3 +125,11 @@ data class Individual(
     override val name: String,
     val height: Int,
 ) : Party
+
+@Serializable
+data class Boxed<T>(val contents: T)
+
+@Serializable(with = CustomBoxedSerializer::class)
+data class CustomBoxed(
+    val definition: BsonDocument
+)

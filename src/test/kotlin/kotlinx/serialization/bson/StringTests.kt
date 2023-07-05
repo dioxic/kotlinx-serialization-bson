@@ -18,7 +18,7 @@ class StringTests : FunSpec({
     with(Bson) {
         include(
             stringTest(
-                name = "include data class with simple values",
+                name = "data class with simple values",
                 dataClass = DataClassWithSimpleValues(
                     boolean = false,
                     byte = 123,
@@ -194,6 +194,35 @@ class StringTests : FunSpec({
                 ),
                 json = """
                     { "always": "default" }
+                """.trimIndent()
+            )
+        )
+        include(
+            stringTest(
+                name ="boxed data class",
+                dataClass = Boxed(contents = DataClassWithSingleValue(
+                    n = 123L
+                )),
+                json = """
+                    { "contents": { "n": 123 } }
+                """.trimIndent()
+            )
+        )
+        include(
+            stringTest(
+                name ="boxed bson document",
+                dataClass = Boxed(contents = BsonDocument("name", "bob".toBson())),
+                json = """
+                    { "contents": { "name": "bob" } }
+                """.trimIndent()
+            )
+        )
+        include(
+            stringTest(
+                name ="custom boxed data class",
+                dataClass = CustomBoxed(definition = BsonDocument("name", "bob".toBson())),
+                json = """
+                    { "name": "bob" }
                 """.trimIndent()
             )
         )
