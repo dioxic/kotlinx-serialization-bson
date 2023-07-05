@@ -7,7 +7,7 @@ data class BsonConfiguration internal constructor(
     val encodeDefaults: Boolean = false,
     val ignoreUnknownKeys: Boolean = false,
     val jsonMode: JsonMode = JsonMode.RELAXED,
-    val newLineCharacters: String = System.getProperty("line.separator"),
+    val newLineCharacters: String = "\n",
     val allowStructuredMapKeys: Boolean = false,
     val prettyPrint: Boolean = false,
     val explicitNulls: Boolean = true,
