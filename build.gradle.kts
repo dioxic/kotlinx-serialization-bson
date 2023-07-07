@@ -1,6 +1,7 @@
 plugins {
-    kotlin("jvm") version "1.8.22"
+    kotlin("jvm") version "1.9.0"
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.versions)
     `maven-publish`
     `java-library`
     signing
