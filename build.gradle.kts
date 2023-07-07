@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
@@ -29,6 +30,13 @@ tasks.test {
 java {
     withJavadocJar()
     withSourcesJar()
+}
+
+kotlin {
+    jvmToolchain(11)
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_11)
+    }
 }
 
 tasks.named<KotlinCompilationTask<*>>("compileTestKotlin").configure {
