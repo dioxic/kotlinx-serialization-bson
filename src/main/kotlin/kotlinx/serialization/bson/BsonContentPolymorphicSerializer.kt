@@ -20,6 +20,7 @@ abstract class BsonContentPolymorphicSerializer<T : Any>(private val baseClass: 
      * However, this descriptor can be overridden to achieve better representation of custom transformed BSON shape
      * for schema generating/introspection purposes.
      */
+
     override val descriptor: SerialDescriptor =
         buildSerialDescriptor("BsonContentPolymorphicSerializer<${baseClass.simpleName}>", PolymorphicKind.SEALED)
 
@@ -34,9 +35,6 @@ abstract class BsonContentPolymorphicSerializer<T : Any>(private val baseClass: 
 
     final override fun deserialize(decoder: Decoder): T {
         val input = decoder.asBsonDecoder()
-        input.reader().apply {
-            currentBsonType ?: readBsonType()
-        }
         val bsonValue = input.decodeBsonValue()
         require(bsonValue is BsonDocument)
 
