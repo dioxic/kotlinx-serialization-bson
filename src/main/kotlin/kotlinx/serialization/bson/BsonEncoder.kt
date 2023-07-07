@@ -1,5 +1,6 @@
 package kotlinx.serialization.bson
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encoding.Encoder
 import org.bson.BsonValue
 import org.bson.BsonWriter
@@ -10,6 +11,7 @@ import org.bson.types.ObjectId
  *
  * For custom serialization handlers
  */
+@ExperimentalSerializationApi
 interface BsonEncoder : Encoder {
 
     /**

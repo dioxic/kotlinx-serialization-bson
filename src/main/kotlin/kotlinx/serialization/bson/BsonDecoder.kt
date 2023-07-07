@@ -1,7 +1,9 @@
 package kotlinx.serialization.bson
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encoding.Decoder
-import org.bson.*
+import org.bson.BsonReader
+import org.bson.BsonValue
 import org.bson.types.ObjectId
 
 /**
@@ -9,9 +11,9 @@ import org.bson.types.ObjectId
  *
  * For custom serialization handlers
  */
+@ExperimentalSerializationApi
 interface BsonDecoder: Decoder {
 
-    @ExperimentalSerializationApi
     val bson: Bson
 
     /** @return the decoded ObjectId */
