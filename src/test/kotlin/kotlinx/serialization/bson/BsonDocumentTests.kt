@@ -1,6 +1,7 @@
 package kotlinx.serialization.bson
 
 import io.kotest.core.spec.style.FunSpec
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.bson.fixtures.DataClassWithBsonValues
 import kotlinx.serialization.bson.fixtures.DataClassWithSerialNames
 import kotlinx.serialization.bson.fixtures.DataClassWithSimpleValues
@@ -10,6 +11,7 @@ import java.math.BigDecimal
 import java.time.Instant
 import java.util.*
 
+@OptIn(ExperimentalSerializationApi::class)
 class BsonDocumentTests : FunSpec({
 
     include(

@@ -9,7 +9,8 @@ import kotlinx.serialization.encoding.Encoder
 import org.bson.BsonDocument
 import kotlin.reflect.KClass
 
-@OptIn(ExperimentalSerializationApi::class, InternalSerializationApi::class)
+@ExperimentalSerializationApi
+@OptIn(InternalSerializationApi::class)
 abstract class BsonContentPolymorphicSerializer<T : Any>(private val baseClass: KClass<T>) : KSerializer<T> {
     /**
      * A descriptor for this set of content-based serializers.

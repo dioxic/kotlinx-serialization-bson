@@ -9,7 +9,6 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-@OptIn(ExperimentalSerializationApi::class)
 object CustomBoxedSerializer : KSerializer<CustomBoxed> {
     override val descriptor: SerialDescriptor =
         PrimitiveSerialDescriptor("CustomBoxed", PrimitiveKind.STRING)

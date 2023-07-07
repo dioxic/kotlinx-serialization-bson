@@ -105,6 +105,7 @@ data class DataClassWithParty(
 sealed interface Party {
     val name: String
 
+    @OptIn(ExperimentalSerializationApi::class)
     companion object PartySerializer : BsonContentPolymorphicSerializer<Party>(Party::class) {
         override fun selectDeserializer(document: BsonDocument) = when {
             "height" in document -> Individual.serializer()

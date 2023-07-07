@@ -1,9 +1,11 @@
 package kotlinx.serialization.bson
 
 import io.kotest.core.spec.style.FunSpec
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.bson.fixtures.DataClassWithSerialNames
 import org.bson.types.ObjectId
 
+@OptIn(ExperimentalSerializationApi::class)
 class BinaryTests : FunSpec({
 
     include(

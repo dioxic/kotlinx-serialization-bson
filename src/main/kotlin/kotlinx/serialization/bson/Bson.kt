@@ -1,4 +1,3 @@
-@file:OptIn(ExperimentalSerializationApi::class)
 @file:Suppress("unused")
 
 package kotlinx.serialization.bson
@@ -59,6 +58,7 @@ import java.nio.ByteBuffer
  * Bson instance also exposes its [configuration] that can be used in custom serializers
  * that rely on [BsonDecoder] and [BsonEncoder] for customizable behaviour.
  */
+@ExperimentalSerializationApi
 sealed class Bson(
     val configuration: BsonConfiguration,
     override val serializersModule: SerializersModule
@@ -156,6 +156,7 @@ sealed class Bson(
 /**
  * Creates an instance of [Bson] configured from the optionally given [Bson instance][from] and adjusted with [builderAction].
  */
+@ExperimentalSerializationApi
 fun Bson(from: Bson = Bson, builderAction: BsonBuilder.() -> Unit): Bson {
     val builder = BsonBuilder(from)
     builder.builderAction()
@@ -169,6 +170,7 @@ fun Bson(from: Bson = Bson, builderAction: BsonBuilder.() -> Unit): Bson {
  *
  * @throws [SerializationException] if the given value cannot be serialized to BSON.
  */
+@ExperimentalSerializationApi
 inline fun <reified T> Bson.encodeToBsonDocument(value: T): BsonDocument {
     return encodeToBsonDocument(serializersModule.serializer(), value)
 }
@@ -180,6 +182,7 @@ inline fun <reified T> Bson.encodeToBsonDocument(value: T): BsonDocument {
  * @throws [SerializationException] if the given BSON element is not a valid BSON input for the type [T]
  * @throws [IllegalArgumentException] if the decoded input cannot be represented as a valid instance of type [T]
  */
+@ExperimentalSerializationApi
 inline fun <reified T> Bson.decodeFromBsonDocument(bson: BsonDocument): T =
     decodeFromBsonDocument(serializersModule.serializer(), bson)
 
@@ -187,6 +190,7 @@ inline fun <reified T> Bson.decodeFromBsonDocument(bson: BsonDocument): T =
  * Builder of the [Bson] instance provided by `Bson { ... }` factory function.
  */
 @Suppress("MemberVisibilityCanBePrivate")
+@ExperimentalSerializationApi
 class BsonBuilder internal constructor(bson: Bson) {
     /**
      * Specifies whether default values of Kotlin properties should be encoded.
@@ -281,6 +285,7 @@ class BsonBuilder internal constructor(bson: Bson) {
     }
 }
 
+@ExperimentalSerializationApi
 private class BsonImpl(configuration: BsonConfiguration, module: SerializersModule) : Bson(configuration, module)
 
 object NoOpFieldNameValidator : FieldNameValidator {

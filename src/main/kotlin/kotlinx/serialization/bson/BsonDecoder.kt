@@ -11,6 +11,7 @@ import org.bson.types.ObjectId
  */
 interface BsonDecoder: Decoder {
 
+    @ExperimentalSerializationApi
     val bson: Bson
 
     /** @return the decoded ObjectId */

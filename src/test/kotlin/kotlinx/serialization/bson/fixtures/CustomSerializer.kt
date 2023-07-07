@@ -9,7 +9,6 @@ import kotlinx.serialization.encoding.*
 import org.bson.BsonDocument
 import org.bson.BsonValue
 
-@OptIn(ExperimentalSerializationApi::class)
 object CustomSerializer : KSerializer<DataClassWithSingleBsonValue> {
     override val descriptor: SerialDescriptor =
         buildClassSerialDescriptor("DataClassWithSingleValue") {

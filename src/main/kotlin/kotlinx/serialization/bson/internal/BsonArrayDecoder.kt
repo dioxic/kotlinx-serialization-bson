@@ -9,7 +9,7 @@ import kotlinx.serialization.modules.SerializersModule
 import org.bson.AbstractBsonReader
 import org.bson.BsonType
 
-@OptIn(ExperimentalSerializationApi::class)
+@ExperimentalSerializationApi
 internal class BsonArrayDecoder(
     reader: AbstractBsonReader,
     serializersModule: SerializersModule,

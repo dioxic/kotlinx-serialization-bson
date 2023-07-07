@@ -1,8 +1,6 @@
 package kotlinx.serialization.bson
 
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.Serializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -13,7 +11,6 @@ import org.bson.*
 import org.bson.types.ObjectId
 
 @Suppress("UNCHECKED_CAST")
-@ExperimentalSerializationApi
 val defaultSerializersModule = SerializersModule {
     contextual(ObjectId::class, ObjectIdSerializer)
     contextual(BsonNull::class, BsonValueSerializer as KSerializer<BsonNull>)
@@ -42,8 +39,6 @@ val defaultSerializersModule = SerializersModule {
     contextual(RawBsonArray::class, BsonValueSerializer as KSerializer<RawBsonArray>)
 }
 
-@ExperimentalSerializationApi
-@Serializer(forClass = ObjectId::class)
 object ObjectIdSerializer : KSerializer<ObjectId> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ObjectIdSerializer", PrimitiveKind.STRING)
 
@@ -56,8 +51,6 @@ object ObjectIdSerializer : KSerializer<ObjectId> {
 
 }
 
-@ExperimentalSerializationApi
-@Serializer(forClass = BsonInt64::class)
 object BsonInt64Serializer : KSerializer<BsonInt64> {
     override val descriptor: SerialDescriptor =
         PrimitiveSerialDescriptor("BsonInt64Serializer", PrimitiveKind.LONG)
@@ -72,8 +65,6 @@ object BsonInt64Serializer : KSerializer<BsonInt64> {
 
 }
 
-@ExperimentalSerializationApi
-@Serializer(forClass = BsonValue::class)
 object BsonValueSerializer : KSerializer<BsonValue> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("BsonValueSerializer", PrimitiveKind.STRING)
 
