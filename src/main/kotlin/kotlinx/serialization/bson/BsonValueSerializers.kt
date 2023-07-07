@@ -1,5 +1,6 @@
 package kotlinx.serialization.bson
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
@@ -10,6 +11,7 @@ import kotlinx.serialization.modules.SerializersModule
 import org.bson.*
 import org.bson.types.ObjectId
 
+@ExperimentalSerializationApi
 @Suppress("UNCHECKED_CAST")
 val defaultSerializersModule = SerializersModule {
     contextual(ObjectId::class, ObjectIdSerializer)
@@ -39,6 +41,7 @@ val defaultSerializersModule = SerializersModule {
     contextual(RawBsonArray::class, BsonValueSerializer as KSerializer<RawBsonArray>)
 }
 
+@ExperimentalSerializationApi
 object ObjectIdSerializer : KSerializer<ObjectId> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ObjectIdSerializer", PrimitiveKind.STRING)
 
@@ -51,6 +54,7 @@ object ObjectIdSerializer : KSerializer<ObjectId> {
 
 }
 
+@ExperimentalSerializationApi
 object BsonInt64Serializer : KSerializer<BsonInt64> {
     override val descriptor: SerialDescriptor =
         PrimitiveSerialDescriptor("BsonInt64Serializer", PrimitiveKind.LONG)
@@ -65,6 +69,7 @@ object BsonInt64Serializer : KSerializer<BsonInt64> {
 
 }
 
+@ExperimentalSerializationApi
 object BsonValueSerializer : KSerializer<BsonValue> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("BsonValueSerializer", PrimitiveKind.STRING)
 
@@ -77,12 +82,14 @@ object BsonValueSerializer : KSerializer<BsonValue> {
 
 }
 
+@ExperimentalSerializationApi
 fun Decoder.asBsonDecoder(): BsonDecoder = this as? BsonDecoder
     ?: throw IllegalStateException(
         "This serializer can be used only with Bson format." +
                 "Expected Decoder to be BsonDecoder, got ${this::class}"
     )
 
+@ExperimentalSerializationApi
 fun Encoder.asBsonEncoder() = this as? BsonEncoder
     ?: throw IllegalStateException(
         "This serializer can be used only with Bson format." +
