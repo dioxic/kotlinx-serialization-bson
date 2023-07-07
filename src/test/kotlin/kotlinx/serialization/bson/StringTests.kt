@@ -240,7 +240,7 @@ class StringTests : FunSpec({
     include(
         stringTest(
             name = "custom boxed data class",
-            dataClass = CustomBoxed(definition = BsonDocument("name", "bob".toBson())),
+            dataClass = CustomBoxed(contents = BsonDocument("name", "bob".toBson())),
             json = """
                 { "name": "bob" }
             """.trimIndent()

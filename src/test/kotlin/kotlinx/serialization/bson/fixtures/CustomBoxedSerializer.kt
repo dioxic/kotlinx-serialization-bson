@@ -20,7 +20,7 @@ object CustomBoxedSerializer : KSerializer<CustomBoxed> {
     }
 
     override fun serialize(encoder: Encoder, value: CustomBoxed) {
-        encoder.encodeSerializableValue(BsonValueSerializer, value.definition)
+        encoder.encodeSerializableValue(BsonValueSerializer, value.contents)
     }
 
 }

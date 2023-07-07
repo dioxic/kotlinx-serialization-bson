@@ -131,5 +131,5 @@ data class Boxed<T>(val contents: T)
 
 @Serializable(with = CustomBoxedSerializer::class)
 data class CustomBoxed(
-    val definition: BsonDocument
+    val contents: BsonDocument
 )
