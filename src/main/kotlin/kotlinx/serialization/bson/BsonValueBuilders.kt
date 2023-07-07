@@ -1,4 +1,3 @@
-@file:OptIn(ExperimentalContracts::class)
 @file:Suppress("MemberVisibilityCanBePrivate", "unused")
 
 package kotlinx.serialization.bson
@@ -10,7 +9,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneOffset
-import java.util.UUID
+import java.util.*
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -41,7 +40,7 @@ inline fun buildBsonDocument(builderAction: BsonDocumentBuilder.() -> Unit): Bso
 /**
  * DSL builder for a [BsonDocument]. To create an instance of builder, use [buildBsonDocument] build function.
  */
-@JsonDslMarker
+@BsonDslMarker
 class BsonDocumentBuilder @PublishedApi internal constructor() {
 
     private val content = mutableListOf<BsonElement>()
@@ -149,7 +148,7 @@ inline fun buildBsonArray(builderAction: BsonArrayBuilder.() -> Unit): BsonArray
  * DSL builder for a [BsonArray]. To create an instance of builder, use [buildBsonArray] build function.
  */
 @Suppress("MemberVisibilityCanBePrivate")
-@JsonDslMarker
+@BsonDslMarker
 class BsonArrayBuilder @PublishedApi internal constructor() {
 
     private val content: MutableList<BsonValue> = mutableListOf()
@@ -234,4 +233,4 @@ class BsonArrayBuilder @PublishedApi internal constructor() {
 }
 
 @DslMarker
-internal annotation class JsonDslMarker
+internal annotation class BsonDslMarker
