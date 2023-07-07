@@ -59,7 +59,8 @@ object ObjectIdSerializer : KSerializer<ObjectId> {
 @ExperimentalSerializationApi
 @Serializer(forClass = BsonInt64::class)
 object BsonInt64Serializer : KSerializer<BsonInt64> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("BsonInt64Serializer", PrimitiveKind.STRING)
+    override val descriptor: SerialDescriptor =
+        PrimitiveSerialDescriptor("BsonInt64Serializer", PrimitiveKind.LONG)
 
     override fun serialize(encoder: Encoder, value: BsonInt64) {
         encoder.encodeLong(value.longValue())
