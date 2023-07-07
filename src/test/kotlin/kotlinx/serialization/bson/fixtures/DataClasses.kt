@@ -1,7 +1,6 @@
 package kotlinx.serialization.bson.fixtures
 
 import kotlinx.serialization.*
-import kotlinx.serialization.bson.BsonContentPolymorphicSerializer
 import org.bson.*
 import org.bson.types.ObjectId
 
@@ -100,17 +99,9 @@ data class DataClassWithParty(
     val party: Party
 )
 
-@Serializable(Party.PartySerializer::class)
+@Serializable(PartySerializer::class)
 sealed interface Party {
     val name: String
-
-    companion object PartySerializer : BsonContentPolymorphicSerializer<Party>(Party::class) {
-        override fun selectDeserializer(document: BsonDocument) = when {
-            "height" in document -> Individual.serializer()
-            "companyId" in document -> Organisation.serializer()
-            else -> error("No valid serializer")
-        }
-    }
 }
 
 @Serializable
