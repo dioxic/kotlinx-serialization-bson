@@ -1,12 +1,10 @@
 package kotlinx.serialization.bson
 
 import io.kotest.core.spec.style.FunSpec
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.bson.fixtures.DataClassWithParty
 import kotlinx.serialization.bson.fixtures.Individual
 import kotlinx.serialization.bson.fixtures.Organisation
 
-@OptIn(ExperimentalSerializationApi::class)
 class BsonContentPolymorphicTests : FunSpec({
 
     include(

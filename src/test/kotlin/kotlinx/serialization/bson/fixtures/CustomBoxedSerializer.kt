@@ -1,6 +1,5 @@
 package kotlinx.serialization.bson.fixtures
 
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.bson.BsonValueSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind

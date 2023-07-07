@@ -1,10 +1,11 @@
-@file:OptIn(ExperimentalSerializationApi::class)
-
 package kotlinx.serialization.bson
 
 import io.kotest.core.spec.style.funSpec
 import io.kotest.matchers.shouldBe
-import kotlinx.serialization.*
+import kotlinx.serialization.decodeFromHexString
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToHexString
+import kotlinx.serialization.encodeToString
 import org.bson.BsonDocument
 
 inline fun <reified T> stringTest(

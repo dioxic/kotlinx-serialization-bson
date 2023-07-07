@@ -3,7 +3,6 @@ package kotlinx.serialization.bson
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.bson.fixtures.*
 import kotlinx.serialization.decodeFromString
@@ -13,7 +12,6 @@ import java.math.BigDecimal
 import java.time.Instant
 import java.util.*
 
-@OptIn(ExperimentalSerializationApi::class)
 class StringTests : FunSpec({
 
     val abcList = listOf("a", "b", "c")

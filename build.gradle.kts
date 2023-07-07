@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
+
 plugins {
     kotlin("jvm") version "1.9.0"
     alias(libs.plugins.kotlin.serialization)
@@ -27,6 +29,10 @@ tasks.test {
 java {
     withJavadocJar()
     withSourcesJar()
+}
+
+tasks.named<KotlinCompilationTask<*>>("compileTestKotlin").configure {
+    compilerOptions.freeCompilerArgs.add("-opt-in=kotlinx.serialization.ExperimentalSerializationApi")
 }
 
 publishing {
