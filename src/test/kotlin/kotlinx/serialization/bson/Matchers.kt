@@ -10,6 +10,7 @@ infix fun String.shouldBeJson(expected: String?): String {
 private fun String.conform() = this
     .replace("\n", "")
     .replace(": ", ":")
+    .replace(" :", ":")
     .replace(", ", ",")
     .replace("{ ", "{")
     .replace(" }", "}")
