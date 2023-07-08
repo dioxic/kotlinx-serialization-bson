@@ -19,6 +19,12 @@ class StringTests : FunSpec({
     val abcMap = mapOf("a" to 1, "b" to 2, "c" to 3)
     val defMap = mapOf("d" to 1, "e" to 2, "f" to 3)
 
+    test("single decode") {
+        val dc = DataClassWithSingleValue(123L)
+        val json = """{ "n": 123 }"""
+        Bson.decodeFromString<DataClassWithSingleValue>(json)
+    }
+
     include(
         stringTest(
             name = "data class with simple values",
@@ -247,6 +253,22 @@ class StringTests : FunSpec({
             """.trimIndent()
         )
     )
+    include(
+        stringTest(
+            name = "data class with custom Serializer",
+            dataClass = DataClassWithCustomSerializer(
+                doc = BsonDocument("name", "Bob".toBson()),
+                number = 123
+            ),
+            json = """
+                { "doc": { "name": "Bob" }, "string": "default", "number": 123 }
+            """.trimIndent(),
+            decodeJson = listOf(
+                """{ "number": 123, "string": "default", "doc": { "name": "Bob" } }""",
+                """{ "number": 123, "doc": { "name": "Bob" } }"""
+            )
+        )
+    )
     context("unknown keys") {
         val dataClass = DataClassWithSingleValue(
             n = 123L
@@ -259,7 +281,7 @@ class StringTests : FunSpec({
             Bson { ignoreUnknownKeys = true }
                 .decodeFromString<DataClassWithSingleValue>(json) shouldBe dataClass
         }
-        test("fails when ignoreUnknownKeys=false)") {
+        test("fails when ignoreUnknownKeys=false") {
             shouldThrow<SerializationException> {
                 Bson.decodeFromString<DataClassWithSingleValue>(json) shouldBe dataClass
             }

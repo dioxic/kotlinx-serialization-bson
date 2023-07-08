@@ -59,8 +59,10 @@ data class DataClassWithSingleValue(
 )
 
 @Serializable(with = CustomSerializer::class)
-data class DataClassWithSingleBsonValue(
-    val doc: BsonDocument
+data class DataClassWithCustomSerializer(
+    val doc: BsonDocument,
+    val string: String = "default",
+    val number: Int
 )
 
 @Serializable
