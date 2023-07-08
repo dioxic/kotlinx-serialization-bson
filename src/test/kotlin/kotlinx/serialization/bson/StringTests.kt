@@ -65,13 +65,14 @@ class StringTests : FunSpec({
         stringTest(
             name = "data class with nulls",
             dataClass = DataClassWithNulls(
-                boolean = true,
-                string = null,
+                boolean = null,
+                string = "abc",
                 listSimple = null
             ),
             json = """
-                { "boolean": true, "string": null, "listSimple": null}
-            """.trimIndent()
+                { "boolean": null, "string": "abc", "listSimple": null}
+            """.trimIndent(),
+            decodeJson = listOf("{}", """{ "string": "abc" }""")
         )
     )
 
