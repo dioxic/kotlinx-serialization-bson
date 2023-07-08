@@ -12,6 +12,7 @@ inline fun <reified T> stringTest(
     name: String,
     dataClass: T,
     json: String,
+    decodeJson: List<String> = listOf(json),
     bson: Bson = Bson,
 ) = funSpec {
     context(name) {
@@ -19,7 +20,9 @@ inline fun <reified T> stringTest(
             bson.encodeToString(dataClass) shouldBeJson json
         }
         test("decode") {
-            bson.decodeFromString<T>(json) shouldBe dataClass
+            decodeJson.forEach {
+                bson.decodeFromString<T>(it) shouldBe dataClass
+            }
         }
     }
 }
