@@ -1,5 +1,7 @@
 name: Gradle Build Action
-on: [push]
+on:
+  push:
+    branches: [ "master" ]
 jobs:
   gradle:
     runs-on: ubuntu-latest
@@ -14,13 +16,6 @@ jobs:
       with:
         java-version: 17
         distribution: 'temurin'
-    - name: Echo
-      run: |
-        echo $SIGNING_KEY
-        echo $GH_USERNAME
-      env:
-        SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-        GH_USERNAME: ${{ vars.GH_USERNAME }}
     - name: Build with Gradle
       uses: gradle/gradle-build-action@v2.6.0
       env:
