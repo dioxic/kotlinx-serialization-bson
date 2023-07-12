@@ -105,7 +105,7 @@ signing {
         val signingKey: String? by project
         val signingPassword: String? by project
         val username: String? by project
-        println("Username!!!! $username")
+        println("PASSWORD!!!! $signingPassword")
         useInMemoryPgpKeys(signingKey, signingPassword)
     }
     sign(publishing.publications["mavenJava"])
