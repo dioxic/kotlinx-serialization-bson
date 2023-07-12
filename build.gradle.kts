@@ -44,6 +44,19 @@ tasks.named<KotlinCompilationTask<*>>("compileTestKotlin").configure {
 }
 
 publishing {
+    repositories {
+        mavenLocal()
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/dioxic/kotlinx-serialization-bson")
+            credentials {
+                val ghUsername: String? by project
+                val ghToken: String? by project
+                username = ghUsername
+                password = ghToken
+            }
+        }
+    }
     publications {
         create<MavenPublication>("mavenJava") {
             from(components["java"])
@@ -89,5 +102,11 @@ tasks.javadoc {
 }
 
 signing {
+    val local: String? by project
+    if (local != "true") {
+        val signingKey: String? by project
+        val signingPassword: String? by project
+        useInMemoryPgpKeys(signingKey, signingPassword)
+    }
     sign(publishing.publications["mavenJava"])
 }
