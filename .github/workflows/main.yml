@@ -19,12 +19,12 @@ jobs:
         echo $GH_USERNAME
       env:
         SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-        GH_USERNAME: $GH_USERNAME
+        GH_USERNAME: ${{ vars.GH_USERNAME }}
     - name: Build with Gradle
       uses: gradle/gradle-build-action@v2.6.0
       env:
         IS_GH_ACTION: true
-        ORG_GRADLE_PROJECT_ghUsername: $ {{ GH_USERNAME }}
+        ORG_GRADLE_PROJECT_ghUsername: ${{ vars.GH_USERNAME }}
         ORG_GRADLE_PROJECT_ghToken: ${{ secrets.GH_TOKEN }}
         ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGNING_KEY }}
         ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASSWORD }}
