@@ -50,8 +50,10 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/dioxic/kotlinx-serialization-bson")
             credentials {
-                username = property("ghUsername") as String?
-                password = property("ghToken") as String?
+                val ghUsername: String? by project
+                val ghToken: String? by project
+                username = ghUsername
+                password = ghToken
             }
         }
     }
