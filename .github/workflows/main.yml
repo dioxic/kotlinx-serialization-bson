@@ -1,0 +1,19 @@
+name: Gradle Build Action
+on:
+  release:
+    types: [ created ]
+uses: gradle/gradle-build-action@v2.6.0
+with:
+  # Gradle version to use. If specified, this Gradle version will be downloaded, added to the PATH and used for invoking Gradle.
+  gradle-version: 8.2
+  # Paths within Gradle User Home to exclude from cache.
+  # Gradle command line arguments (supports multi-line input)
+  arguments: publish
+  # When 'false', no Job Summary will be generated for the Job.
+  generate-job-summary: true
+  # Specifies if a GitHub dependency snapshot should be generated for each Gradle build, and if so, how. Valid values are 'disabled' (default), 'generate', 'generate-and-submit' and 'download-and-submit'.
+  dependency-graph: disabled
+  # When 'true', the action will attempt to remove any stale/unused entries from the Gradle User Home prior to saving to the GitHub Actions cache.
+  gradle-home-cache-cleanup: true
+  # The GitHub token used to authenticate when submitting via the Dependency Submission API.
+  github-token: ${{ github.token }}
