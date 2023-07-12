@@ -2,6 +2,8 @@ name: Gradle Build Action
 on:
   push:
     branches: [ "master" ]
+    tags:
+      - 'v.*'
 jobs:
   publish:
     runs-on: ubuntu-latest
