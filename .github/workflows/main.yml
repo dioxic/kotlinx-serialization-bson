@@ -23,6 +23,7 @@ jobs:
       uses: gradle/gradle-build-action@v2.6.0
       env:
         IS_GH_ACTION: true
+        ORG_GRADLE_PROJECT_USERNAME: BobTheDuck
         ORG_GRADLE_PROJECT_SIGNINGKEY: ${{ secrets.SIGNING_KEY }}
         ORG_GRADLE_PROJECT_SIGNINGPASSWORD: ${{ secrets.SIGNING_PASSWORD }}
       with:
