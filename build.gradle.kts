@@ -48,7 +48,7 @@ publishing {
         mavenLocal()
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/dioxic/kotlinx-serliaization-bson")
+            url = uri("https://maven.pkg.github.com/dioxic/kotlinx-serialization-bson")
             credentials {
                 username = property("ghUsername") as String?
                 password = property("ghToken") as String?
@@ -101,12 +101,9 @@ tasks.javadoc {
 
 signing {
     val local: String? by project
-    val username: String? by project
-    println("USERNAME!!!! $username")
     if (local != "true") {
         val signingKey: String? by project
         val signingPassword: String? by project
-        println("PASSWORD!!!! $signingPassword")
         useInMemoryPgpKeys(signingKey, signingPassword)
     }
     sign(publishing.publications["mavenJava"])
