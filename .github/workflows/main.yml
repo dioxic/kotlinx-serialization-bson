@@ -1,10 +1,11 @@
 name: Gradle Build Action
 on: [push]
-permissions:
-  contents: read
 jobs:
   gradle:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
 
     steps:
     - uses: actions/checkout@v3
