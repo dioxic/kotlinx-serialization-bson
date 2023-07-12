@@ -19,6 +19,8 @@ jobs:
       uses: gradle/gradle-build-action@v2.6.0
       env:
         IS_GH_ACTION: true
+        ORG_GRADLE_PROJECT_ghUsername: ${{ vars.GH_USERNAME }}
+        ORG_GRADLE_PROJECT_ghToken: ${{ secrets.GH_TOKEN }}
       with:
         arguments: test
         gradle-version: 8.2
