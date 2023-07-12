@@ -15,7 +15,9 @@ jobs:
         distribution: 'temurin'
     - name: Echo
       run: |
-        echo ${{ secrets.SIGNING_KEY }}
+        echo $SIGNING_KEY
+      env:
+        SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
     - name: Build with Gradle
       uses: gradle/gradle-build-action@v2.6.0
       env:
