@@ -19,6 +19,7 @@ jobs:
         echo $GH_USERNAME
       env:
         SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+        $GH_USERNAME: $GH_USERNAME
     - name: Build with Gradle
       uses: gradle/gradle-build-action@v2.6.0
       env:
