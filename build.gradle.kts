@@ -44,6 +44,17 @@ tasks.named<KotlinCompilationTask<*>>("compileTestKotlin").configure {
 }
 
 publishing {
+    repositories {
+        mavenLocal()
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/dioxic/kotlinx-serliaization-bson")
+            credentials {
+                username = project.findProperty("github.username") as String? ?: System.getenv("GH_USERNAME")
+                password = project.findProperty("github.token") as String? ?: System.getenv("GH_TOKEN")
+            }
+        }
+    }
     publications {
         create<MavenPublication>("mavenJava") {
             from(components["java"])
