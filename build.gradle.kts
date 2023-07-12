@@ -50,8 +50,8 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/dioxic/kotlinx-serliaization-bson")
             credentials {
-                username = project.findProperty("github.username") as String? ?: System.getenv("GH_USERNAME")
-                password = project.findProperty("github.token") as String? ?: System.getenv("GH_TOKEN")
+                username = property("ghUsername") as String?
+                password = property("ghToken") as String?
             }
         }
     }
