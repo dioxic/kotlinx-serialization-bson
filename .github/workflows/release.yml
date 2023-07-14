@@ -6,7 +6,7 @@ on:
         description: 'Name of version  (e.g. 1.2.0)'
         required: true
 jobs:
-  createrelease:
+  release:
     runs-on: ubuntu-latest
 
     steps:
