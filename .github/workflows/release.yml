@@ -5,6 +5,8 @@ on:
       versionName:
         description: 'Name of version  (e.g. 1.2.0)'
         required: true
+permissions:
+  contents: write
 jobs:
   release:
     runs-on: ubuntu-latest
