@@ -19,8 +19,7 @@ jobs:
     - name: Get release information
       run: |
         versionName=`sed -n 's/version = "\(.*\)"/\1/p' build.gradle.kts`
-        export VERSION_NAME=$versionName
-        echo "::set-env name=VERSION_NAME::$VERSION_NAME"
+        echo "VERSION_NAME=$versionName" >> "$GITHUB_ENV"
     - name: Publish with Gradle
       uses: gradle/gradle-build-action@v2.6.0
       env:
