@@ -46,5 +46,17 @@ jobs:
         reviewers: ${{ github.event.issue.user.login }}
         body: |
          Hi!
-         This PR was created in response workflow running.
+         This PR was created from the release workflow.
          I've updated the version name and code commit: ${{ steps.make-commit.outputs.commit }}.
+    - name: Create pull request into develop
+      uses: thomaseizinger/create-pull-request@1.3.1
+      with:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        head: release/v${{ github.event.inputs.versionName }}
+        base: develop
+        title: v${{ github.event.inputs.versionName }} into develop
+        reviewers: ${{ github.event.issue.user.login }}
+        body: |
+          Hi!
+          This PR was created from the release workflow.
+          I've updated the version name and code commit: ${{ steps.make-commit.outputs.commit }}.
