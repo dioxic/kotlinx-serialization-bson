@@ -64,6 +64,8 @@ sealed class Bson(
     override val serializersModule: SerializersModule
 ) : StringFormat, BinaryFormat {
 
+    private val bsonDocumentCodec = BsonDocumentCodec()
+
     /**
      * The default instance of [Bson] with default configuration.
      */
@@ -76,7 +78,7 @@ sealed class Bson(
      */
     final override fun <T> encodeToString(serializer: SerializationStrategy<T>, value: T): String {
         val writer = StringWriter()
-        BsonDocumentCodec().encode(
+        bsonDocumentCodec.encode(
             writer = JsonWriter(writer, configuration.toJsonWriterSettings()),
             value = encodeToBsonDocument(serializer, value),
         )
@@ -92,7 +94,7 @@ sealed class Bson(
     final override fun <T> decodeFromString(deserializer: DeserializationStrategy<T>, string: String): T {
         return decodeFromBsonDocument(
             deserializer = deserializer,
-            bson = BsonDocumentCodec().decode(JsonReader(string))
+            bson = bsonDocumentCodec.decode(JsonReader(string))
         )
     }
 
@@ -102,7 +104,7 @@ sealed class Bson(
     override fun <T> decodeFromByteArray(deserializer: DeserializationStrategy<T>, bytes: ByteArray): T {
         return decodeFromBsonDocument(
             deserializer = deserializer,
-            bson = BsonDocumentCodec().decode(BsonBinaryReader(ByteBuffer.wrap(bytes)))
+            bson = bsonDocumentCodec.decode(BsonBinaryReader(ByteBuffer.wrap(bytes)))
         )
     }
 
@@ -142,6 +144,19 @@ sealed class Bson(
         require(reader is AbstractBsonReader)
         return deserializer.deserialize(DefaultBsonDecoder(reader, serializersModule, configuration, this))
     }
+
+    internal fun <T> Bson.encodeByWriter(writer: BsonWriter, serializer: SerializationStrategy<T>, value: T) {
+        bsonDocumentCodec.encode(
+            writer = writer,
+            value = encodeToBsonDocument(serializer, value),
+        )
+    }
+
+    internal fun <T> Bson.decodeByReader(reader: BsonReader, deserializer: DeserializationStrategy<T>): T =
+        decodeFromBsonDocument(
+            deserializer = deserializer,
+            bson = bsonDocumentCodec.decode(reader)
+        )
 
     /**
      * Deserializes the given BSON [string] into a corresponding [BsonValue] representation.
@@ -294,10 +309,10 @@ object NoOpFieldNameValidator : FieldNameValidator {
     override fun getValidatorForField(fieldName: String?) = this
 }
 
-private fun BsonDocumentCodec.decode(reader: BsonReader) =
+internal fun BsonDocumentCodec.decode(reader: BsonReader) =
     this.decode(reader, DecoderContext.builder().build())
 
-private fun BsonDocumentCodec.encode(writer: BsonWriter, value: BsonDocument) =
+internal fun BsonDocumentCodec.encode(writer: BsonWriter, value: BsonDocument) =
     this.encode(writer, value, EncoderContext.builder().build())
 
 private const val defaultIndent = "  "

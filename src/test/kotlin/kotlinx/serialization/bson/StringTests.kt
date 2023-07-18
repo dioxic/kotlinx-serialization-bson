@@ -19,12 +19,6 @@ class StringTests : FunSpec({
     val abcMap = mapOf("a" to 1, "b" to 2, "c" to 3)
     val defMap = mapOf("d" to 1, "e" to 2, "f" to 3)
 
-    test("single decode") {
-        val dc = DataClassWithSingleValue(123L)
-        val json = """{ "n": 123 }"""
-        Bson.decodeFromString<DataClassWithSingleValue>(json)
-    }
-
     include(
         stringTest(
             name = "data class with simple values",

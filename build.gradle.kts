@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "uk.dioxic.kotlinx"
-version = "0.0.4"
+version = "0.0.2"
 
 repositories {
     mavenCentral()
